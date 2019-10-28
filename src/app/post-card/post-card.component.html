@@ -1,0 +1,36 @@
+<nz-card
+  style="width:700px; margin-top: 20px"
+  [nzCover]="coverTemplate"
+  [nzActions]="[actionComment, actionEdit]"
+  [nzHoverable]="true"
+>
+  <nz-card-meta
+    nzTitle="Card title"
+    nzDescription="This is the description à "
+    [nzAvatar]="avatarTemplate"
+  >
+  </nz-card-meta>
+  <div class="Conteneur-rate-post">
+    <nz-rate [(ngModel)]="value" [nzTooltips]="tooltips"></nz-rate>
+    <span *ngIf="value" class="ant-rate-text">{{
+      value ? tooltips[value - 1] : ""
+    }}</span>
+  </div>
+</nz-card>
+<div>
+  <ng-template #avatarTemplate>
+    <nz-avatar
+      nzSrc="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+    ></nz-avatar>
+  </ng-template>
+  <ng-template #coverTemplate>
+    <img alt="example" src=".../backend/uploads/ceci-1571998275319.jpeg " />
+  </ng-template>
+  <ng-template #actionComment>
+    <i nz-icon nzType="message" nzTheme="outline" (click)="showMessage()"></i>
+  </ng-template>
+  <ng-template #actionEdit>
+    <i nz-icon nzType="edit"></i>
+  </ng-template>
+  <app-comments *ngIf="ComVisible == true"></app-comments>
+</div>

@@ -1,0 +1,11 @@
+{
+  "name": "login",
+  "version": "1.0.0",
+  "description": "",
+  "main": "login.js",
+  "scripts": {
+    "test": "npm i mysql"
+  },
+  "author": "",
+  "license": "ISC"
+}

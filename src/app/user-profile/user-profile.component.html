@@ -1,0 +1,51 @@
+<div>
+  <table>
+    <tr>
+      <td rowspan="3">
+        <nz-avatar
+          nzIcon="user"
+          nzSrc="https://image.noelshack.com/fichiers/2019/43/2/1571769024-photo.png"
+        ></nz-avatar>
+      </td>
+      <td>
+        <span nz-text nzType="secondary"><h2>just_ayzø</h2></span>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <button nz-button nzType="dashed">Modifier le profil</button>
+        <i
+          nz-icon
+          [nzSpin]="true"
+          [nzType]="'setting'"
+          [nzTheme]="'outline'"
+        ></i>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p nz-paragraph nzCopyable nzEditable [(nzContent)]="copyStr"></p>
+      </td>
+    </tr>
+  </table>
+
+  <div class="center">
+    <div nz-card-grid [ngStyle]="gridStyle">193 abonnés</div>
+    <div nz-card-grid [ngStyle]="gridStyle">225 abonnements</div>
+    <div nz-card-grid [ngStyle]="gridStyle">9 publications</div>
+  </div>
+
+  <div id="photos-div">
+    <mat-grid-list cols="3" rowHeight="3:1">
+      <mat-grid-tile>1</mat-grid-tile>
+      <mat-grid-tile>2</mat-grid-tile>
+      <mat-grid-tile>3</mat-grid-tile>
+      <mat-grid-tile>4</mat-grid-tile>
+      <mat-grid-tile>5</mat-grid-tile>
+      <mat-grid-tile>6</mat-grid-tile>
+      <mat-grid-tile>7</mat-grid-tile>
+      <mat-grid-tile>8</mat-grid-tile>
+      <mat-grid-tile>9</mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>

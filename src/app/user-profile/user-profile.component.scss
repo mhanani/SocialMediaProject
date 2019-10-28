@@ -1,0 +1,49 @@
+nz-avatar {
+  margin-top: 16px;
+  margin-right: 16px;
+  height: 200px;
+  width: 200px;
+}
+
+div {
+  text-align: center;
+  margin: 0 auto;
+}
+
+span {
+  padding: 16px;
+}
+
+td {
+  text-align: center;
+  padding: 16px;
+}
+
+button {
+  width: 160px;
+}
+
+mat-grid-tile {
+  background: lightgrey;
+}
+
+[nz-icon] {
+  margin-right: 6px;
+  font-size: 24px;
+  padding-top: 16px;
+}
+
+#photos-div {
+  padding-top: 80px;
+  width: 1200px;
+  margin: auto;
+  top: 50%;
+  left: 50%;
+}
+
+.center {
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  width: 1000px;
+}

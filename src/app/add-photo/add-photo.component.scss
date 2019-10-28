@@ -1,0 +1,43 @@
+.footer-ajouter {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+}
+
+.div-ajouter-boutton {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.button-ajouter {
+  margin-left: 80px;
+  font-size: large;
+  height: 50px;
+  width: 200px;
+  color: #27ae60;
+}
+
+.button-ajouter:hover {
+  border-color: #27ae60;
+  color: #27ae60;
+}
+
+:host ::ng-deep .upload-list-inline .ant-upload-list-item {
+  float: left;
+  width: 200px;
+  margin-right: 8px;
+}
+
+.modal-anunuler-button {
+}
+
+.clearfix {
+  margin-bottom: 5px;
+}
+
+img {
+  margin-top: 10px;
+  height: 30%;
+  width: 30%;
+}

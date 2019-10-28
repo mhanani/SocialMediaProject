@@ -1,0 +1,78 @@
+<nz-layout class="layout-principale">
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" nzWidth="200px">
+    <div class="logo">
+      <i
+        nz-icon
+        nzType="instagram"
+        nzTheme="outline"
+        style="font-size: 30px; color: white"
+      ></i>
+      <span *ngIf="isCollapsed == false" style="color: white">Instagram</span>
+    </div>
+    <ul
+      nz-menu
+      nzTheme="dark"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <li nz-submenu nzTitle="{{ UserName }}" nzIcon="user">
+        <ul>
+          <li nz-menu-item>
+            mon compte
+          </li>
+          <li nz-menu-item>
+            paramètre du compte
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Abonné" nzIcon="team">
+        <ul>
+          <li nz-menu-item>Team 1</li>
+          <li nz-menu-item>Team 2</li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Abonnement" nzIcon="team">
+        <ul>
+          <li nz-menu-item>Team 1</li>
+          <li nz-menu-item>Team 2</li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Deconnection" nzIcon="logout">
+        <ul>
+          <li nz-menu-item>Team 1</li>
+          <li nz-menu-item>Team 2</li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="header-flexbox">
+        <div class="header-div-gauche"></div>
+        <div class="header-div-center">
+          <nz-input-group [nzSuffix]="suffixIconSearch">
+            <input type="text" nz-input placeholder="input search text" />
+          </nz-input-group>
+          <ng-template #suffixIconSearch>
+            <i nz-icon nzType="search"></i>
+          </ng-template>
+        </div>
+        <div class="header-div-right">
+          <i
+            nz-icon
+            nzType="message"
+            nzTheme="outline"
+            style="font-size: 25px;"
+          ></i>
+        </div>
+      </div>
+    </nz-header>
+
+    <div
+      class="Conteneur-Principale"
+      *ngFor="let dummy of ' '.repeat(10).split('')"
+    >
+      <app-post-card></app-post-card>
+    </div>
+  </nz-layout>
+</nz-layout>
