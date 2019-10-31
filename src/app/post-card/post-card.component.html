@@ -5,16 +5,16 @@
   [nzHoverable]="true"
 >
   <nz-card-meta
-    nzTitle="Card title"
-    nzDescription="This is the description à "
+    [nzTitle]=TitreImage
+    [nzDescription]=DescriptionImage
     [nzAvatar]="avatarTemplate"
   >
   </nz-card-meta>
   <div class="Conteneur-rate-post">
     <nz-rate [(ngModel)]="value" [nzTooltips]="tooltips"></nz-rate>
     <span *ngIf="value" class="ant-rate-text">{{
-      value ? tooltips[value - 1] : ""
-    }}</span>
+        value ? tooltips[value - 1] : ""
+      }}</span>
   </div>
 </nz-card>
 <div>
@@ -24,7 +24,7 @@
     ></nz-avatar>
   </ng-template>
   <ng-template #coverTemplate>
-    <img alt="example" src=".../backend/uploads/ceci-1571998275319.jpeg " />
+    <img [src]=ImagePath alt="une image"/>
   </ng-template>
   <ng-template #actionComment>
     <i nz-icon nzType="message" nzTheme="outline" (click)="showMessage()"></i>

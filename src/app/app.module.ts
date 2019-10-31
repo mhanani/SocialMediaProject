@@ -60,7 +60,7 @@ registerLocaleData(fr);
     MatSidenavModule,
     FormsModule
   ],
-  providers: [],
+  providers: [{ provide: NZ_I18N, useValue: fr_BE }],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

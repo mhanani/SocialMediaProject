@@ -1,19 +1,8 @@
 <footer class="footer-ajouter">
   <div class="div-ajouter-boutton">
-    <button
-      nz-button
-      nzType="outline"
-      nzShape="round"
-      (click)="showModal()"
-      class="button-ajouter"
-    >
-      <i
-        nz-icon
-        nzType="plus-circle"
-        nzTheme="outline"
-        style="font-size: large"
-      ></i
-      >Ajouter
+    <button nz-button nzType="outline" nzShape="round" (click)="showModal()" class="button-ajouter">
+      <i nz-icon nzType="plus-circle" nzTheme="outline" style="font-size: large"></i>
+      Ajouter
     </button>
   </div>
   <nz-modal
@@ -30,25 +19,20 @@
     <ng-template #modalContent>
       Choissisez voter image
 
-      <nz-upload
-        [(nzFileList)]="fileList"
-        nzListType="picture"
-        nzName="coucou"
-        [nzBeforeUpload]="beforeUpload"
-      >
+      <nz-upload [(nzFileList)]="fileList" nzListType="picture" nzName="coucou" [nzBeforeUpload]="beforeUpload">
         <button nz-button>
           <i nz-icon nzType="upload"></i><span>Upload</span>
         </button>
         <div *ngIf="imagePreview !== '' && imagePreview">
-          <img [src]="imagePreview" />
+          <img [src]="imagePreview"/>
         </div>
       </nz-upload>
 
       <div>
         <nz-divider></nz-divider>
         Titre :
-        <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre" />
-        <br />
+        <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre"/>
+        <br/>
         Description :
         <textarea
           nz-input
@@ -59,22 +43,9 @@
       </div>
     </ng-template>
     <ng-template #modalFooter>
-      <button
-        nz-button
-        nzType="danger"
-        (click)="handleCancel()"
-        class="modal-anunuler-button"
-      >
-        Annuler
-      </button>
-      <button
-        nz-button
-        nzType="default"
-        (click)="handleOk('success')"
-        [nzLoading]="isConfirmLoading"
-        class="modal-poster-button"
-      >
-        Poster
+      <button nz-button nzType="danger" (click)="handleCancel()" class="modal-anunuler-button">Annuler</button>
+      <button nz-button nzType="default" (click)="handleOk('success')" [nzLoading]="isConfirmLoading"
+              class="modal-poster-button">Poster
       </button>
     </ng-template>
   </nz-modal>

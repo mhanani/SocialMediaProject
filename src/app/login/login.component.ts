@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { User } from "src/Model/User/user";
-import { UserService } from "src/Services/UserService/user.service";
+import { UserService } from "src/app/Services/UserService/user.service";
 
 @Component({
   selector: "app-login",
