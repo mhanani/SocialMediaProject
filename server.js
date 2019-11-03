@@ -1,18 +1,23 @@
 const mysql = require("mysql");
 const express = require("express");
 const bodyparser = require("body-parser");
-const session = require("express-session");
 const cors = require("cors");
-
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const crypto = require("crypto");
+var LocalStorage = require("node-localstorage").LocalStorage,
+  localStorage = new LocalStorage("./scratch");
 var app = express();
 
-app.use(bodyparser.json());
+app.use(bodyparser.json()); // to give Express the ability to read JSON payloads from the HTTP request body
 app.use(cors());
+
+const RSA_PRIVATE_KEY = "secret"; // People usually store it in a file and use fs library to open it (fs.readFyleSync('');)
 
 var mysqlConnection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "",
   database: "web_project"
 });
 
@@ -40,6 +45,7 @@ app.post("/register", (req, res) => {
   var INSERT_QUERY =
     "INSERT INTO users (nom,prenom,age,email,pseudo,password,nb_publications,nb_relations) VALUES (?,?,?,?,?,?,?,?)";
   var query = mysql.format(INSERT_QUERY, [
+    // thanks to bodyParser.json(), we can call req.body
     req.body.nom,
     req.body.prenom,
     req.body.age,
@@ -53,27 +59,38 @@ app.post("/register", (req, res) => {
   mysqlConnection.query(query, (err, rows, fields) => {
     if (!err) {
       console.log(rows);
+      res.redirect("http://localhost:4200/login");
     } else {
       console.log(err);
     }
   });
 });
 
-// LOGIN
+// LOGIN. Regarder comment faire app.route("/login").post(functionName)
 
 app.post("/login", (req, res) => {
   var email = req.body.email;
   var password = req.body.password;
-  res.status(200).send({ message: email + " - " + password });
 
   mysqlConnection.query(
     "SELECT * FROM users WHERE email = ? AND password = ?",
     [email, password],
     (err, row, fields) => {
       if (row.length > 0) {
-        console.log(row);
+        const iduser = row[0].id_user;
+        // res.status(200).send({ message: email + " - " + password });
+        const payload = { id_user: iduser };
+
+        const token_jwtmethod = jwt.sign(payload, RSA_PRIVATE_KEY, {
+          algorithm: "HS256",
+          expiresIn: 30
+        });
+
+        console.log("token method : " + token_jwtmethod);
+
+        res.status(200).json({ token: token_jwtmethod });
       } else {
-        console.log(err);
+        res.status(404).send(err);
       }
     }
   );

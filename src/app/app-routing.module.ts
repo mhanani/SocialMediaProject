@@ -7,6 +7,7 @@ import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { PostCardComponent } from "./post-card/post-card.component";
 import { AddPhotoComponent } from "./add-photo/add-photo.component";
 import { NavbarComponent } from "./navbar/navbar.component";
+import { AuthGuard } from "src/Services/AuthGuard/auth.guard";
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
@@ -14,20 +15,19 @@ const routes: Routes = [
   { path: "register", component: RegisterComponent },
   {
     path: "user-profile",
-    component: UserProfileComponent
+    component: UserProfileComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: "post-card",
-    component: PostCardComponent,
-    children: [
-      { path: "add-photo", component: AddPhotoComponent },
-      { path: "navbar", component: NavbarComponent }
-    ]
+    path: "navbar",
+    component: NavbarComponent,
+    children: [{ path: "add-photo", component: AddPhotoComponent }]
   }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
+  providers: [AuthGuard],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

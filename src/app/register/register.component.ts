@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { User } from "src/Model/User/user";
-import { UserService } from "src/Services/UserService/user.service";
+import { AuthService } from "src/Services/AuthService/auth.service";
 
 @Component({
   selector: "app-register",
@@ -8,7 +8,7 @@ import { UserService } from "src/Services/UserService/user.service";
   styleUrls: ["./register.component.scss"]
 })
 export class RegisterComponent implements OnInit {
-  constructor(private _userService: UserService) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {}
   submitted = false;
@@ -20,7 +20,7 @@ export class RegisterComponent implements OnInit {
 
   register() {
     this.submitted = true;
-    this._userService.user_post_request(this.userModel, this._url).subscribe(
+    this.authService.user_post_request(this.userModel, this._url).subscribe(
       // Subscribe car observable
       data => console.log("Succes !", data),
       error => console.log("Error !", error)
