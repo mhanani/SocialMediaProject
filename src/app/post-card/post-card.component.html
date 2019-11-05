@@ -11,10 +11,17 @@
   >
   </nz-card-meta>
   <div class="Conteneur-rate-post">
-    <nz-rate [(ngModel)]="value" [nzTooltips]="tooltips"></nz-rate>
-    <span *ngIf="value" class="ant-rate-text">{{
-        value ? tooltips[value - 1] : ""
-      }}</span>
+    <div>
+      <nz-rate [(ngModel)]="value" [nzTooltips]="tooltips" (click)="EnvoieRate(value)"></nz-rate>
+      <span *ngIf="value" class="ant-rate-text">{{
+          value ? tooltips[value - 1] : ""
+        }}</span>
+    </div>
+    <div *ngIf="value!=0">
+      <div><span>moyenne : {{Votes}} vote(s)</span>
+        <nz-rate [ngModel]="valueMoyenne" nzDisabled></nz-rate>
+      </div>
+    </div>
   </div>
 </nz-card>
 <div>
@@ -32,5 +39,5 @@
   <ng-template #actionEdit>
     <i nz-icon nzType="edit"></i>
   </ng-template>
-  <app-comments *ngIf="ComVisible == true"></app-comments>
+  <app-comments [ImageTab]="ImageTab" *ngIf="ComVisible == true"></app-comments>
 </div>

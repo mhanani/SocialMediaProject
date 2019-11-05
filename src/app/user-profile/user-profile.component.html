@@ -8,7 +8,7 @@
         ></nz-avatar>
       </td>
       <td>
-        <span nz-text nzType="secondary"><h2>just_ayzø</h2></span>
+        <span nz-text nzType="secondary"><h2>{{pseudo}}</h2></span>
       </td>
     </tr>
     <tr>
@@ -27,9 +27,8 @@
   </table>
 
   <div class="center">
-    <div nz-card-grid [ngStyle]="gridStyle">193 abonnés</div>
-    <div nz-card-grid [ngStyle]="gridStyle">225 abonnements</div>
-    <div nz-card-grid [ngStyle]="gridStyle">9 publications</div>
+    <div nz-card-grid [ngStyle]="gridStyle">{{nbAmis}} amis</div>
+    <div nz-card-grid [ngStyle]="gridStyle">{{nbPublication}} publications</div>
   </div>
 
   <div id="photos-div">

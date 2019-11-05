@@ -49,7 +49,7 @@ export class AddPhotoComponent implements OnInit {
     setTimeout(() => {
       this.isConfirmLoading = false;
       this.isVisible = false;
-      this.imageService.EnvoieUneImage('http://localhost:3000/Images', postData);
+      this.imageService.EnvoieUneImage(postData);
       this.fileList = [];
       this.valueTitre = '';
       this.valueDescription = '';

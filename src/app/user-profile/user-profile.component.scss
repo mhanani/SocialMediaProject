@@ -49,8 +49,7 @@ mat-grid-tile:hover {
 .center {
   text-align: center;
   display: flex;
-  flex-wrap: wrap;
-  width: 1000px;
+  justify-content: space-around;
 }
 
 #Conteneur-principal {

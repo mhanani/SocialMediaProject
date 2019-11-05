@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ImageService} from '../Services/ServiceImage/images.service';
-import {Subscription} from 'rxjs';
+import {UserService} from '../Services/UserService/user.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,26 +15,17 @@ export class UserProfileComponent implements OnInit {
   valueDescription = '';
   extension: string;
   nomFichier: string;
-
+  TableauImage: any[];
+  nbPublication: number;
+  nbAmis: number;
+  pseudo: string;
+  // promise.then(successCallback, failureCallback);
   gridStyle = {
-    width: '25%',
+    width: '100%',
     textAlign: 'center'
   };
-  TableauImage: any[] = [];
 
-  constructor(private imageService: ImageService) {
-  }
-
-  Initiation() {
-    return new Promise(
-      (resolve, reject) => {
-        this.imageService.ImagesProfiles('http://localhost:3000/ImagesProfile/' + this.imageService.IdSession);
-        setTimeout(
-          () => {
-            resolve(this.TableauImage = this.imageService.TableauImageProfile);
-          }, 1000
-        );
-      });
+  constructor(private imageService: ImageService, private userService: UserService) {
   }
 
   checkIcon(Image) {
@@ -46,21 +37,34 @@ export class UserProfileComponent implements OnInit {
     this.nomFichier = Image.post_nom;
   }
 
-  //faire la methode supprimer et modifier avec des subject pour rendrer ca dynamqiue
-  // méthode supprimer nécessiter d'appuyer deux fois sur la touche supprimer pour supprimer l'item, arrang ca avec un subject
   Supprimer() {
     this.isVisible = false;
-    this.imageService.SupressionImage(
-      'http://localhost:3000/SupressionImage/' + this.imageService.IdSession,
-      {chemin: this.imagePreview, nom: this.nomFichier, ext: this.extension});
-    this.Initiation();
+    this.imageService.SupressionImage({chemin: this.imagePreview, nom: this.nomFichier, ext: this.extension}).subscribe(res => {
+      this.Initiation();
+    });
   }
 
   Modifier() {
     this.isVisible = false;
-    this.imageService.ModificationImage('http://localhost:3000/ModificationImage/' + this.imageService.IdSession,
-      {titre: this.valueTitre, description: this.valueDescription, chemin: this.imagePreview});
-    this.Initiation();
+    this.imageService.ModificationImage(
+      {titre: this.valueTitre, description: this.valueDescription, chemin: this.imagePreview}).subscribe(res => {
+      this.Initiation();
+    }, error => {
+      console.log('une erreur' + error);
+    });
+
+  }
+
+
+  Initiation() {
+    this.userService.getData().subscribe(response => {
+      this.nbPublication = response[0].nb_publications;
+      this.nbAmis = response[0].nb_relations;
+      this.pseudo = response[0].pseudo;
+    });
+    this.imageService.Profiles().subscribe(reponse => {
+      this.TableauImage = reponse;
+    });
   }
 
   Close() {
@@ -68,7 +72,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    // j'appel tout les images du type où l'id user est égal à un
     this.Initiation();
   }
 }

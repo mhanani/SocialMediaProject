@@ -53,9 +53,10 @@ app.get('/personne', (req, res) => {
   })
 });
 
-app.post('/Images', multer({storage: storage}).single("image"), (req, res, next) => {
+app.post('/Images/:id', multer({storage: storage}).single("image"), (req, res, next) => {
+
   const valeurNet = JSON.parse(JSON.stringify(req.body)); // pour parser en json
-  const id_user = 1;
+  const id_user = req.params.id;
   const name = req.file.originalname
     .toLowerCase()
     .split(" ")
@@ -64,13 +65,17 @@ app.post('/Images', multer({storage: storage}).single("image"), (req, res, next)
   const url = req.protocol + '://' + req.get("host");
   const imagePath = url + '/' + name + ext;
 
-  //commentaire
   var sql = 'INSERT INTO post(post_titre, post_nom, post_description, post_ext, post_chemin, id_user) VALUES (?,?,?,?,?,?) ';
   Values = [valeurNet.titre, name, valeurNet.description, ext, imagePath, id_user]
-  db.query(sql, Values, function (err, result, fields) {
+
+
+  db.query(sql, Values, (err, result, fields) => {
     if (err) throw err;
-    res.json(Values);
   });
+  db.query('UPDATE users SET nb_publications = nb_publications + 1 WHERE id_user = ?', req.params.id, (err, result, fields) => {
+    if (err) throw err;
+  });
+  res.json(Values);
 });
 
 app.get('/ImageRecuperer', (req, res) => {
@@ -83,10 +88,8 @@ app.get('/ImageRecuperer', (req, res) => {
     }
   })
 });
-
-
 app.get("/ImagesProfile/:id", (req, res) => {
-  db.query("SELECT * FROM post WHERE id_user = ?", req.params.id, (err, rows, fields) => {
+  db.query("SELECT * FROM post WHERE id_user = ? ORDER BY id_post DESC", req.params.id, (err, rows, fields) => {
       if (!err) {
         res.send(rows);
       } else {
@@ -100,8 +103,8 @@ app.post("/ModificationImage/:id", (req, res) => {
   db.query(
     " UPDATE post SET post_description = ?, post_titre = ? WHERE id_user = ? AND post_chemin = ?",
     [req.body.description, req.body.titre, req.params.id, req.body.chemin], (err, rows, fields) => {
-      if (err) {
-        console.log(err);
+      if (!err) {
+        res.json('');
       }
     });
 });
@@ -115,14 +118,87 @@ app.post("/SupressionImage/:id", (req, res) => {
       } catch (err) {
         console.error(err)
       }
-
     } else {
       console.log(err);
+    }
+  });
+  db.query('UPDATE users SET nb_publications = nb_publications - 1 WHERE id_user = ?', req.params.id, (err, result, fields) => {
+    if (err) throw err;
+  });
+  res.json();
+});
 
+
+///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////   Rate
+////////////////////////////////////////////////////////////////////////////
+app.post("/EnvoieRate/:id/postID/:id_post", (req, res) => {
+  db.query('SELECT rate_given FROM postrate WHERE id_user = ? AND id_post = ?', [req.params.id, req.params.id_post], (err, rows, fields) => {
+    if (rows.length === 0) {
+      db.query('INSERT INTO postrate(rate_given, id_user, id_post) VALUES (?,?,?)', [req.body.valeur, req.params.id, req.params.id_post]);
+      res.json('insertion');
+    } else {
+      db.query('UPDATE postrate SET rate_given = ? WHERE id_user = ? AND id_post = ?', [req.body.valeur, req.params.id, req.params.id_post]);
+      res.json("modification");
     }
   });
 });
 
+app.get("/GetRate/:id/postID/:id_post", (req, res) => {
+  db.query('SELECT rate_given FROM postrate WHERE id_user = ? AND id_post = ?', [req.params.id, req.params.id_post], (err, responseSQL, fields) => {
+    if (!err) {
+      PointRate = responseSQL[0];
+      db.query('SELECT SUM(rate_given) AS Somme  FROM postrate WHERE id_post = ?', [req.params.id_post], (err, responseSQL, fields) => {
+        if (!err) {
+          ScoreTotalRate = responseSQL[0];
+          db.query('SELECT rate_given FROM postrate WHERE id_post = ?', [req.params.id_post], (err, responseSQL, fields) => {
+            if (!err) {
+              TotalRate = responseSQL.length;
+              res.json([PointRate, TotalRate, ScoreTotalRate]);
+            }
+          });
+        }
+      });
+    }
+  });
+});
+
+
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////// Commentaires
+////////////////////////////////////////////////////////////////////////////
+
+app.post("/EnvoieCommentaire/pseudo/:pseudo/postID/:id_post", (req, res) => {
+  db.query('INSERT INTO commentaire(pseudo, commentaire, id_post) VALUES (?,?,?)', [req.params.pseudo, req.body.contenu, req.params.id_post], (err, rows, fields) => {
+    const pseudo = req.params.pseudo;
+    const commentaire = req.body.contenu;
+    res.json([pseudo, commentaire]);
+  });
+});
+
+app.get("/GetCommentaire/postID/:id_post", (req, res) => {
+  db.query('SELECT commentaire, created_date, pseudo FROM commentaire WHERE id_post = ? ORDER BY id_commentaire DESC', [req.params.id_post], (err, responseSQL, fields) => {
+    if (!err) {
+      res.send(responseSQL);
+    }
+  });
+});
+
+
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////// Requete et renvoie Users, la partie de mathios surement rempli de bug
+////////////////////////////////////////////////////////////////////////////
+
+
+app.get("/getData/:id", (req, res) => {
+  db.query('SELECT * FROM users WHERE id_user = ? ', req.params.id, (err, responseSQL, fields) => {
+    if (!err) {
+      res.send(responseSQL)
+    } else {
+      console.log(err)
+    }
+  })
+});
 
 ////////////////////////////////////////
 // REGISTRATION

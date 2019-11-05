@@ -1,22 +1,21 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
+import {UserService} from '../UserService/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
-  TableauImage: any[] = [];
-  TableauUpdated = new Subject<any[]>();
-  TableauImageProfile: any[] = [];
-  TableauImageProfileUpdated = new Subject<any[]>(); // le subject qui sera utilsé pour rentre la page prfile image dynamique
-  IdSession = 1;
+  TableauUpdated = new Subject();
+  TableauMessage = new Subject();
+  IdSession = this.userService.UserId;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private userService: UserService) {
   }
 
-  EnvoieUneImage(url: string, contenu) {
-    this.http.post(url, contenu).subscribe(res => {
+  EnvoieUneImage(contenu) {
+    this.http.post('http://localhost:3000/Images/' + this.IdSession, contenu).subscribe(res => {
       const titre = res[0];
       const nom = res[1];
       const description = res[2];
@@ -31,33 +30,50 @@ export class ImageService {
         post_chemin: chemin,
         id_user: idUser
       };
-      this.TableauImage.unshift(post);
-      this.TableauUpdated.next(this.TableauImage);
+      this.TableauUpdated.next(post);
     });
   }
 
-  AffichageImage(url: string) {
-    this.http.get<any[]>(url).subscribe(resultat => (
-      this.TableauImage = resultat
-    ));
+  AffichageImages(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:3000/ImageRecuperer');
   }
 
-  ImagesProfiles(url: string) {
-    this.http.get<any[]>(url).subscribe(resultat => (
-      this.TableauImageProfile = resultat
-    ));
+  Profiles(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:3000/ImagesProfile/' + this.IdSession);
   }
 
   // a modifier encore car pas la  bonne méthode
-  ModificationImage(url: string, contenu) {
-    this.http.post(url, contenu).subscribe(res => {
-    });
-    this.ImagesProfiles('http://localhost:3000/ImagesProfile/' + this.IdSession);
+  ModificationImage(contenu) {
+    return this.http.post('http://localhost:3000/ModificationImage/' + this.IdSession, contenu);
   }
 
-  SupressionImage(url: string, contenu) {
-    this.http.post(url, contenu).subscribe(res => {
+  SupressionImage(contenu) {
+    return this.http.post('http://localhost:3000/SupressionImage/' + this.IdSession, contenu);
+  }
+  ////////////////////////////////////////////////////////////// RATE
+  EnvoieRate(url: string, value: number) {
+    return this.http.post(url, {valeur: value});
+  }
+
+  GetRate(getIDImage: number) {
+    return this.http.get('http://localhost:3000/GetRate/' + this.IdSession + '/postID/' + getIDImage);
+  }
+  ////////////////////////////////////////////////////////////// Commentaire
+
+  GetCommentaire(getIDImage: number) {
+    return this.http.get('http://localhost:3000/GetCommentaire/postID/' + getIDImage);
+  }
+
+  EnvoieCommentaire(pseudo: string, contenu: string, idPost: number) {
+    this.http.post('http://localhost:3000/EnvoieCommentaire/pseudo/' + pseudo + '/postID/' + idPost, {contenu}).subscribe(res => {
+      const Pseudo = res[0];
+      const Lecommentaire = res[1];
+      const commentaires = {
+        pseudo: Pseudo,
+        commentaire: Lecommentaire,
+        created_date: new Date()
+      };
+      this.TableauMessage.next(commentaires);
     });
-    this.ImagesProfiles('http://localhost:3000/ImagesProfile/' + this.IdSession);
   }
 }

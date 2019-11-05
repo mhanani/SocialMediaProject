@@ -4,7 +4,6 @@ import {HomeComponent} from './home/home.component';
 import {RegisterComponent} from './register/register.component';
 import {LoginComponent} from './login/login.component';
 import {UserProfileComponent} from './user-profile/user-profile.component';
-import {PostCardComponent} from './post-card/post-card.component';
 import {AddPhotoComponent} from './add-photo/add-photo.component';
 import {NavbarComponent} from './navbar/navbar.component';
 
