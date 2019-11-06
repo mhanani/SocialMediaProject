@@ -13,7 +13,7 @@ import { NavbarComponent } from "./navbar/navbar.component";
 import { CommentsComponent } from "./comments/comments.component";
 import { PostCardComponent } from "./post-card/post-card.component";
 // Librairies
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ToastrModule } from "ngx-toastr";
 import { NzAvatarModule } from "ng-zorro-antd/avatar";
@@ -27,6 +27,9 @@ import { registerLocaleData } from "@angular/common";
 import fr from "@angular/common/locales/fr";
 import { MatSelectModule, MatSidenavModule } from "@angular/material";
 import { FormsModule } from "@angular/forms";
+import { TokenInterceptorService } from "src/Services/TokenInterceptor/token-interceptor.service";
+import { AuthService } from "src/Services/AuthService/auth.service";
+import { AuthGuard } from "src/Services/AuthGuard/auth.guard";
 
 registerLocaleData(fr);
 
@@ -60,7 +63,20 @@ registerLocaleData(fr);
     MatSidenavModule,
     FormsModule
   ],
+<<<<<<< HEAD
   providers: [{ provide: NZ_I18N, useValue: fr_BE }],
+=======
+  providers: [
+    { provide: NZ_I18N, useValue: fr_BE },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true
+    },
+    AuthService,
+    AuthGuard
+  ],
+>>>>>>> origin
   bootstrap: [AppComponent]
 })
 export class AppModule {}
