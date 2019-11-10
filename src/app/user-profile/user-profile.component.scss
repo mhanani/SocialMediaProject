@@ -25,6 +25,13 @@ button {
 
 mat-grid-tile {
   background: lightgrey;
+  transition: transform 0.2s;
+}
+
+mat-grid-tile:hover {
+  transform: scale(1.25);
+  z-index: 1;
+  border-radius: 5px;
 }
 
 [nz-icon] {
@@ -36,14 +43,31 @@ mat-grid-tile {
 #photos-div {
   padding-top: 80px;
   width: 1200px;
-  margin: auto;
-  top: 50%;
-  left: 50%;
 }
 
 .center {
   text-align: center;
   display: flex;
-  flex-wrap: wrap;
-  width: 1000px;
+  justify-content: space-around;
+}
+
+#Conteneur-principal {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#Contenu-modificateur {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#Rouage {
+  padding: 0;
+}
+
+#conteneur-boutton {
+  display: flex;
+  justify-content: space-between;
 }

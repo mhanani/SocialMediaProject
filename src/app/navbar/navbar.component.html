@@ -68,11 +68,11 @@
       </div>
     </nz-header>
 
-    <div
-      class="Conteneur-Principale"
-      *ngFor="let dummy of ' '.repeat(10).split('')"
-    >
-      <app-post-card></app-post-card>
+    <div class="Conteneur-Principale" *ngFor="let Image of tableauImage">
+      <app-post-card [ImageTab]="Image"></app-post-card>
+    </div>
+    <div>
+      <app-add-photo></app-add-photo>
     </div>
   </nz-layout>
 </nz-layout>

@@ -21,7 +21,8 @@ const routes: Routes = [
   {
     path: "navbar",
     component: NavbarComponent,
-    children: [{ path: "add-photo", component: AddPhotoComponent }]
+    children: [{ path: "add-photo", component: AddPhotoComponent }],
+    canActivate: [AuthGuard]
   }
 ];
 

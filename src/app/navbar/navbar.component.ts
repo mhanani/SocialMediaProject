@@ -1,47 +1,33 @@
-import { Component, OnInit } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Subscription } from "rxjs";
+import { ImageService } from "src/Services/ServiceImage/images.service";
 
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
   styleUrls: ["./navbar.component.scss"]
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   isCollapsed = true;
-  tableauDeDonnee: any[];
   UserName;
-  selectedFile: File = null;
+  tableauImage: any[] = [];
+  private TableauSub: Subscription;
 
-  constructor(private http: HttpClient, private httpHeader: HttpHeaders) {}
+  constructor(private imageService: ImageService) {}
 
-  ngOnInit() {}
-
-  recuparation() {
-    return new Promise((resolve, reject) => {
-      this.http
-        .get<any[]>("http://localhost:3000/personne")
-        .subscribe(resultat => (this.tableauDeDonnee = resultat));
-      setTimeout(() => {
-        resolve((this.UserName = this.tableauDeDonnee[0].name));
-      }, 1000);
+  ngOnInit() {
+    this.imageService.AffichageImages().subscribe(reponse => {
+      console.log(reponse);
+      this.tableauImage = reponse;
     });
+    this.TableauSub = this.imageService.TableauUpdated.subscribe(
+      NouveauPost => {
+        this.tableauImage.unshift(NouveauPost);
+      }
+    );
   }
 
-  OnFileSelected($event) {
-    console.log($event.target.files[0].name);
-    this.selectedFile = $event.target.files[0] as File;
-  }
-
-  OnUpload() {
-    const fd = new FormData();
-    fd.append("image", this.selectedFile, this.selectedFile.name);
-    console.log(fd);
-    this.http
-      .post("http://localhost:3000/Image", {
-        commentaire: this.selectedFile.name
-      })
-      .subscribe(res => {
-        console.log(res);
-      });
+  ngOnDestroy() {
+    this.TableauSub.unsubscribe();
   }
 }

@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { User } from "src/Model/User/user";
 import { HttpClient } from "@angular/common/http";
 import * as jwt_decode from "jwt-decode";
 import { JwtHelperService } from "@auth0/angular-jwt";
@@ -14,8 +13,12 @@ export class AuthService {
   private readonly REFRESH_TOKEN = "REFRESH_TOKEN";
   jwtHelper = new JwtHelperService();
 
-  user_post_request(user: User, url: string) {
-    return this._http.post<any>(url, user);
+  user_post_request(value: any, url: string) {
+    return this._http.post<any>(url, value);
+  }
+
+  user_profile_request(url: string) {
+    return this._http.post<any>("", url);
   }
 
   public getToken(): string {
@@ -36,6 +39,16 @@ export class AuthService {
 
   public isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  getIdDecodedToken(): number {
+    const decodedToken = this.jwtHelper.decodeToken(this.getToken());
+    return decodedToken.id_user;
+  }
+
+  getPseudoDecodedToken(): string {
+    const decodedToken = this.jwtHelper.decodeToken(this.getToken());
+    return decodedToken.pseudo;
   }
 
   getTokenExpirationDate(): Date {

@@ -8,9 +8,13 @@ const crypto = require("crypto");
 var LocalStorage = require("node-localstorage").LocalStorage,
   localStorage = new LocalStorage("./scratch");
 var app = express();
+var multer = require("multer");
+const session = require("express-session");
 
 app.use(bodyparser.json()); // to give Express the ability to read JSON payloads from the HTTP request body
 app.use(cors());
+app.use(bodyparser.urlencoded({ extended: false }));
+app.use(express.static("Images"));
 
 const RSA_PRIVATE_KEY = "secret"; // People usually store it in a file and use fs library to open it (fs.readFyleSync('');)
 
@@ -32,6 +36,232 @@ mysqlConnection.connect(err => {
 });
 
 app.listen(3000, () => console.log("Express server is running at port 3000"));
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////// AMAR
+////////////////////////////////////////////////////////////////////////////////////////
+
+const MIME_TYPE_MAP = {
+  "image/png": "png",
+  "image/jpeg": "jpeg",
+  "image/jpg": "jpg"
+};
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "Images");
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname
+      .toLowerCase()
+      .split(" ")
+      .join("-");
+    const ext = MIME_TYPE_MAP[file.mimetype]; // l'extension
+    cb(null, name + "." + ext);
+  }
+});
+
+app.post("/image/commentaire", (req, res, next) => {
+  var sql = "INSERT INTO images (img_commentaire) VALUES (?) ";
+  const values = req.body.commentaire;
+
+  mysqlConnection.query(sql, values, function(err, result, fields) {
+    if (err) throw err;
+    res.json("ahahah");
+  });
+});
+
+app.post(
+  "/Images/:id",
+  multer({ storage: storage }).single("image"),
+  (req, res, next) => {
+    const valeurNet = JSON.parse(JSON.stringify(req.body)); // pour parser en json
+    const id_user = req.params.id;
+    const name = req.file.originalname
+      .toLowerCase()
+      .split(" ")
+      .join("-");
+    const ext = "." + MIME_TYPE_MAP[req.file.mimetype];
+    const url = req.protocol + "://" + req.get("host");
+    const imagePath = url + "/" + name + ext;
+
+    var sql =
+      "INSERT INTO post(post_titre, post_nom, post_description, post_ext, post_chemin, id_user) VALUES (?,?,?,?,?,?) ";
+    Values = [
+      valeurNet.titre,
+      name,
+      valeurNet.description,
+      ext,
+      imagePath,
+      id_user
+    ];
+
+    mysqlConnection.query(sql, Values, (err, result, fields) => {
+      if (err) throw err;
+    });
+    mysqlConnection.query(
+      "UPDATE users SET nb_publications = nb_publications + 1 WHERE id_user = ?",
+      req.params.id,
+      (err, result, fields) => {
+        if (err) throw err;
+      }
+    );
+    res.json(Values);
+  }
+);
+
+app.get("/ImageRecuperer", (req, res) => {
+  mysqlConnection.query(
+    "SELECT * FROM post ORDER BY id_post DESC;",
+    (err, rows, fields) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+app.get("/ImagesProfile/:id", (req, res) => {
+  mysqlConnection.query(
+    "SELECT * FROM post WHERE id_user = ? ORDER BY id_post DESC",
+    req.params.id,
+    (err, rows, fields) => {
+      if (!err) {
+        res.send(rows);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+
+app.post("/ModificationImage/:id", (req, res) => {
+  mysqlConnection.query(
+    " UPDATE post SET post_description = ?, post_titre = ? WHERE id_user = ? AND post_chemin = ?",
+    [req.body.description, req.body.titre, req.params.id, req.body.chemin],
+    (err, rows, fields) => {
+      if (!err) {
+        res.json("");
+      }
+    }
+  );
+});
+app.post("/SupressionImage/:id", (req, res) => {
+  mysqlConnection.query(
+    "DELETE FROM post WHERE id_user = ? AND post_chemin = ?",
+    [req.params.id, req.body.chemin],
+    (err, rows, fields) => {
+      if (!err) {
+        const path = "./Images/" + req.body.nom + req.body.ext;
+        try {
+          fs.unlinkSync(path);
+          console.log("fichier" + path + "supprimer");
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        console.log(err);
+      }
+    }
+  );
+  mysqlConnection.query(
+    "UPDATE users SET nb_publications = nb_publications - 1 WHERE id_user = ?",
+    req.params.id,
+    (err, result, fields) => {
+      if (err) throw err;
+    }
+  );
+  res.json();
+});
+
+/////////////// Rate ////////////////
+
+app.post("/EnvoieRate/:id/postID/:id_post", (req, res) => {
+  mysqlConnection.query(
+    "SELECT rate_given FROM postrate WHERE id_user = ? AND id_post = ?",
+    [req.params.id, req.params.id_post],
+    (err, rows, fields) => {
+      if (rows.length === 0) {
+        mysqlConnection.query(
+          "INSERT INTO postrate(rate_given, id_user, id_post) VALUES (?,?,?)",
+          [req.body.valeur, req.params.id, req.params.id_post]
+        );
+        res.json("insertion");
+      } else {
+        mysqlConnection.query(
+          "UPDATE postrate SET rate_given = ? WHERE id_user = ? AND id_post = ?",
+          [req.body.valeur, req.params.id, req.params.id_post]
+        );
+        res.json("modification");
+      }
+    }
+  );
+});
+
+app.get("/GetRate/:id/postID/:id_post", (req, res) => {
+  mysqlConnection.query(
+    "SELECT rate_given FROM postrate WHERE id_user = ? AND id_post = ?",
+    [req.params.id, req.params.id_post],
+    (err, responseSQL, fields) => {
+      if (!err) {
+        PointRate = responseSQL[0];
+        mysqlConnection.query(
+          "SELECT SUM(rate_given) AS Somme  FROM postrate WHERE id_post = ?",
+          [req.params.id_post],
+          (err, responseSQL, fields) => {
+            if (!err) {
+              ScoreTotalRate = responseSQL[0];
+              mysqlConnection.query(
+                "SELECT rate_given FROM postrate WHERE id_post = ?",
+                [req.params.id_post],
+                (err, responseSQL, fields) => {
+                  if (!err) {
+                    TotalRate = responseSQL.length;
+                    res.json([PointRate, TotalRate, ScoreTotalRate]);
+                  }
+                }
+              );
+            }
+          }
+        );
+      }
+    }
+  );
+});
+
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////// Commentaires
+////////////////////////////////////////////////////////////////////////////
+
+app.post("/EnvoieCommentaire/pseudo/:pseudo/postID/:id_post", (req, res) => {
+  mysqlConnection.query(
+    "INSERT INTO commentaire(pseudo, commentaire, id_post) VALUES (?,?,?)",
+    [req.params.pseudo, req.body.contenu, req.params.id_post],
+    (err, rows, fields) => {
+      const pseudo = req.params.pseudo;
+      const commentaire = req.body.contenu;
+      res.json([pseudo, commentaire]);
+    }
+  );
+});
+
+app.get("/GetCommentaire/postID/:id_post", (req, res) => {
+  mysqlConnection.query(
+    "SELECT commentaire, created_date, pseudo FROM commentaire WHERE id_post = ? ORDER BY id_commentaire DESC",
+    [req.params.id_post],
+    (err, responseSQL, fields) => {
+      if (!err) {
+        res.send(responseSQL);
+      }
+    }
+  );
+});
+
+//////////////
+
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////// AMAR
+////////////////////////////////////////////////////////////////////////////////////////
 
 app.get("/", (req, res) => {
   res.send("Hello server is running !");
@@ -78,17 +308,16 @@ app.post("/login", (req, res) => {
     (err, row, fields) => {
       if (row.length > 0) {
         const iduser = row[0].id_user;
+        const pseudo = row[0].pseudo;
         // res.status(200).send({ message: email + " - " + password });
-        const payload = { id_user: iduser };
+        const payload = { id_user: iduser, pseudo: pseudo };
 
         const token_jwtmethod = jwt.sign(payload, RSA_PRIVATE_KEY, {
           algorithm: "HS256",
           expiresIn: 30
         });
 
-        console.log("token method : " + token_jwtmethod);
-
-        res.status(200).json({ token: token_jwtmethod });
+        res.status(200).json({ token: token_jwtmethod, email: email });
       } else {
         res.status(404).send(err);
       }
@@ -96,26 +325,32 @@ app.post("/login", (req, res) => {
   );
 });
 
-// Get all users
+// Get user-profile
 
-app.get("/users", (req, res) => {
-  mysqlConnection.query("SELECT * FROM users", (err, rows, fields) => {
-    if (!err) {
-      console.log(rows);
-    } else {
-      console.log(err);
-    }
-  });
-});
-
-// Get specific user
-
-app.get("/users/:id", (req, res) => {
+app.get("/user-profile/:id", (req, res) => {
   mysqlConnection.query(
     "SELECT * FROM users WHERE id_user = ?",
     [req.params.id],
     (err, rows, fields) => {
       if (!err) {
+        var nom = rows[0].nom;
+        var prenom = rows[0].prenom;
+        var pseudo = rows[0].pseudo;
+        var age = rows[0].age;
+        var email = rows[0].email;
+        var nb_publications = rows[0].nb_publications;
+        var nb_relations = rows[0].nb_relations;
+
+        console.log(rows);
+        /* res.status(201).json({
+          nom: nom,
+          prenom: prenom,
+          pseudo: pseudo,
+          age: age,
+          email: email,
+          nb_publications: nb_publications,
+          nb_relations: nb_relations
+        });*/
         res.send(rows);
       } else {
         console.log(err);
@@ -123,7 +358,3 @@ app.get("/users/:id", (req, res) => {
     }
   );
 });
-
-// Insert an user
-
-app.post("/users", (req, res) => {});

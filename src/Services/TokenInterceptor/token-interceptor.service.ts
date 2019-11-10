@@ -26,7 +26,7 @@ export class TokenInterceptorService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     //Using interceptors is all about changing outgoing requests and incoming responses, but we can’t tamper with the original request–it needs to be immutable. To make changes we need to clone the original request.
 
-    if (this.auth.getToken()) {
+    if (this.auth.getToken() && this.auth.isMyTokenExpired() == false) {
       request = request.clone({
         // When we clone we setHeaders
         setHeaders: {
@@ -39,7 +39,7 @@ export class TokenInterceptorService implements HttpInterceptor {
       tap(
         event => {
           if (event instanceof HttpResponse) {
-            //window.location.href = "http://localhost:4200/navbar";
+            //window.location.href = "http://localhost:4200/login";
           }
         },
         error => {

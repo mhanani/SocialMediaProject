@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { HttpClient } from "@angular/common/http";
 import { UploadFile } from "ng-zorro-antd";
+import { ImageService } from "src/Services/ServiceImage/images.service";
 
 @Component({
   selector: "app-add-photo",
@@ -16,7 +17,11 @@ export class AddPhotoComponent implements OnInit {
   imagePreview: string;
   fileList = [];
 
-  constructor(private message: NzMessageService, private http: HttpClient) {}
+  constructor(
+    private message: NzMessageService,
+    private http: HttpClient,
+    private imageService: ImageService
+  ) {}
 
   ngOnInit() {}
 
@@ -46,14 +51,13 @@ export class AddPhotoComponent implements OnInit {
     setTimeout(() => {
       this.isConfirmLoading = false;
       this.isVisible = false;
-      this.http.post("http://localhost:3000/Image", postData).subscribe(res => {
-        console.log(res);
-      });
+      this.imageService.EnvoieUneImage(postData);
       this.fileList = [];
       this.valueTitre = "";
       this.valueDescription = "";
+      this.imagePreview = "";
       this.message.create(type, `Votre photo à bien été posté`);
-    }, 2000);
+    }, 1000);
   }
 
   // la fenetre pour fermer le modal
@@ -63,5 +67,6 @@ export class AddPhotoComponent implements OnInit {
     this.valueTitre = "";
     this.valueDescription = "";
     this.isVisible = false;
+    this.imagePreview = "";
   }
 }

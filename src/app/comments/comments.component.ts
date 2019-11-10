@@ -1,5 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { distanceInWords } from "date-fns";
+import { Subscription } from "rxjs";
+import { ImageService } from "src/Services/ServiceImage/images.service";
+import { AuthService } from "src/Services/AuthService/auth.service";
 
 @Component({
   selector: "app-comments",
@@ -7,17 +10,46 @@ import { distanceInWords } from "date-fns";
   styleUrls: ["./comments.component.scss"]
 })
 export class CommentsComponent implements OnInit {
-  data: any[] = [];
+  TableauCommentaire: any = [];
+  private TableauSub: Subscription;
   submitting = false;
-  user = {
-    author: "Han Solo",
-    avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-  };
+  author: "Han Solo";
+  avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
   inputValue = "";
+  @Input() ImageTab;
+  Pseudo = this.auth.getPseudoDecodedToken();
 
-  constructor() {}
+  constructor(private imageService: ImageService, private auth: AuthService) {}
 
-  ngOnInit() {}
+  GetCommentaire() {
+    this.imageService.GetCommentaire(this.ImageTab.id_post).subscribe(res => {
+      this.TableauCommentaire = res;
+      console.log(this.TableauCommentaire);
+    });
+  }
 
-  handleSubmit(): void {}
+  EnvoieCommentaire(pseudo: string, contenu: string, idPost: number) {
+    if (contenu !== "") {
+      this.imageService.EnvoieCommentaire(pseudo, contenu, idPost);
+    }
+  }
+
+  ngOnInit() {
+    this.GetCommentaire();
+    this.TableauSub = this.imageService.TableauMessage.subscribe(
+      NouveauCommentaire => {
+        this.TableauCommentaire.unshift(NouveauCommentaire);
+      }
+    );
+  }
+
+  handleSubmit(): void {
+    this.submitting = true;
+    const content = this.inputValue;
+    this.inputValue = "";
+    setTimeout(() => {
+      this.submitting = false;
+      this.EnvoieCommentaire(this.Pseudo, content, this.ImageTab.id_post);
+    }, 500);
+  }
 }
