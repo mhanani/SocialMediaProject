@@ -1,13 +1,21 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 mt-5 mx-auto">
-      <form
-        #registerForm="ngForm"
-        *ngIf="!submitted"
-        (ngSubmit)="register()"
-        novalidate
-      >
-        <!--{{ registerForm.value | json }}
+<div class="background">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 mt-5 mx-auto">
+        <form
+          #registerForm="ngForm"
+          *ngIf="!submitted"
+          (ngSubmit)="register()"
+          novalidate
+        >
+          <!--{{ registerForm.value | json }}
         <hr />
 
         {{ userModel | json }}
@@ -15,96 +23,97 @@
         {{ registerForm.form.valid }} = true si tous les champs sont complétés
         -->
 
-        <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-        <div class="form-group">
-          <label>First name</label>
-          <input
-            type="text"
-            #firstname
-            required
-            [class.is-invalid]="firstname.invalid && firstname.touched"
-            class="form-control"
-            name="prenom"
-            placeholder="Enter your first name"
-            [(ngModel)]="userModel.prenom"
-          />
-          <!-- [(ngModel)] c'est du 2 way bindings grâce aux paranthèses + crochets. Just crochet = Data to view.
+          <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+          <div class="form-group">
+            <label>First name</label>
+            <input
+              type="text"
+              #firstname
+              required
+              [class.is-invalid]="firstname.invalid && firstname.touched"
+              class="form-control"
+              name="prenom"
+              placeholder="Enter your first name"
+              [(ngModel)]="userModel.prenom"
+            />
+            <!-- [(ngModel)] c'est du 2 way bindings grâce aux paranthèses + crochets. Just crochet = Data to view.
               Pour que userModel ne soit pas souligné en rouge, faut l'importer (classe user) dans le .ts
               #firstname puis en bas si on fait {{ name.className }} ça permet de print sur le site l'état de l'input (untouched, valid, etc.)
               On peut faire #firstname=[ngModel] puis faire en bas {{ firstname.untouched }} et ça print true si c'est pas touch. Si tu touch ça devient false, etc.-->
-          <!-- [class.is-invalid]="firstname.invalid" => contour devient rouge si c'est invalid. && .touched en gros si de base c'est invalide ça reste normal, quand on clique dedans et ressort direct là ca devient rouge-->
-          <small
-            class="text-danger"
-            [class.d-none]="!firstname.valid || firstname.untouched"
-            >First name is required.</small
+            <!-- [class.is-invalid]="firstname.invalid" => contour devient rouge si c'est invalid. && .touched en gros si de base c'est invalide ça reste normal, quand on clique dedans et ressort direct là ca devient rouge-->
+            <small
+              class="text-danger"
+              [class.d-none]="!firstname.valid || firstname.untouched"
+              >First name is required.</small
+            >
+            <!-- ce small affiche un message si c'est invalid -->
+          </div>
+          <!--{{ firstname.className }}-->
+          <div class="form-group">
+            <label>Last name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="nom"
+              placeholder="Enter your last name"
+              [(ngModel)]="userModel.nom"
+            />
+          </div>
+          <div class="form-group">
+            <label>Age</label>
+            <input
+              type="number"
+              class="form-control"
+              name="age"
+              placeholder="Age"
+              [(ngModel)]="userModel.age"
+            />
+          </div>
+          <div class="form-group">
+            <label>Email address</label>
+            <input
+              type="email"
+              class="form-control"
+              #email
+              name="email"
+              #emai="ngModel"
+              [class.is-invalid]="email.invalid && email.touched"
+              placeholder="Enter email"
+              [(ngModel)]="userModel.email"
+            />
+          </div>
+          <div class="form-group">
+            <label>Pseudo</label>
+            <input
+              type="text"
+              class="form-control"
+              name="pseudo"
+              placeholder="Enter pseudo"
+              [(ngModel)]="userModel.pseudo"
+            />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              placeholder="Password"
+              [(ngModel)]="userModel.password"
+            />
+          </div>
+          <button
+            [disabled]="registerForm.form.invalid"
+            type="submit"
+            class="btn btn-lg btn-primary btn-block"
           >
-          <!-- ce small affiche un message si c'est invalid -->
-        </div>
-        <!--{{ firstname.className }}-->
-        <div class="form-group">
-          <label>Last name</label>
-          <input
-            type="text"
-            class="form-control"
-            name="nom"
-            placeholder="Enter your last name"
-            [(ngModel)]="userModel.nom"
-          />
-        </div>
-        <div class="form-group">
-          <label>Age</label>
-          <input
-            type="number"
-            class="form-control"
-            name="age"
-            placeholder="Age"
-            [(ngModel)]="userModel.age"
-          />
-        </div>
-        <div class="form-group">
-          <label>Email address</label>
-          <input
-            type="email"
-            class="form-control"
-            #email
-            name="email"
-            #emai="ngModel"
-            [class.is-invalid]="email.invalid && email.touched"
-            placeholder="Enter email"
-            [(ngModel)]="userModel.email"
-          />
-        </div>
-        <div class="form-group">
-          <label>Pseudo</label>
-          <input
-            type="text"
-            class="form-control"
-            name="pseudo"
-            placeholder="Enter pseudo"
-            [(ngModel)]="userModel.pseudo"
-          />
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            class="form-control"
-            name="password"
-            placeholder="Password"
-            [(ngModel)]="userModel.password"
-          />
-        </div>
-        <button
-          [disabled]="registerForm.form.invalid"
-          type="submit"
-          class="btn btn-lg btn-primary btn-block"
-        >
-          Register
-        </button>
-      </form>
+            Register
+          </button>
+        </form>
 
-      <!-- AFTER REGISTRATION - mettre un message succes + redirection -->
-      <form *ngIf="submitted"></form>
+        <!-- AFTER REGISTRATION - mettre un message succes + redirection -->
+        <form *ngIf="submitted"></form>
+      </div>
     </div>
   </div>
 </div>
