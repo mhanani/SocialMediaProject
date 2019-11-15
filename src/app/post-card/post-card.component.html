@@ -18,8 +18,8 @@
         (click)="EnvoieRate(value)"
       ></nz-rate>
       <span *ngIf="value" class="ant-rate-text">{{
-        value ? tooltips[value - 1] : ""
-      }}</span>
+          value ? tooltips[value - 1] : ""
+        }}</span>
     </div>
     <div *ngIf="value != 0">
       <div>
@@ -32,11 +32,11 @@
 <div>
   <ng-template #avatarTemplate>
     <nz-avatar
-      nzSrc="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+      [nzSrc]=UrlPhotoUser
     ></nz-avatar>
   </ng-template>
   <ng-template #coverTemplate>
-    <img [src]="ImagePath" alt="une image" />
+    <img [src]="ImagePath" alt="une image"/>
   </ng-template>
   <ng-template #actionComment>
     <i nz-icon nzType="message" nzTheme="outline" (click)="showMessage()"></i>

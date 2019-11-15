@@ -1,13 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
 import * as jwt_decode from "jwt-decode";
-import { JwtHelperService } from "@auth0/angular-jwt";
+import {JwtHelperService} from "@auth0/angular-jwt";
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthService {
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient) {
+  }
 
   private readonly JWT_TOKEN = "token";
   private readonly REFRESH_TOKEN = "REFRESH_TOKEN";
@@ -49,6 +50,11 @@ export class AuthService {
   getPseudoDecodedToken(): string {
     const decodedToken = this.jwtHelper.decodeToken(this.getToken());
     return decodedToken.pseudo;
+  }
+
+  getPhotoDecodedToken(): string {
+    const decodedToken = this.jwtHelper.decodeToken(this.getToken());
+    return decodedToken.url_photo;
   }
 
   getTokenExpirationDate(): Date {

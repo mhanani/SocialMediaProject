@@ -18,6 +18,7 @@ export class PostCardComponent implements OnInit {
   DescriptionImage;
   ImagePath;
   Votes: number;
+  UrlPhotoUser;
 
   showMessage() {
     this.ComVisible = !this.ComVisible;
@@ -46,6 +47,7 @@ export class PostCardComponent implements OnInit {
     this.TitreImage = this.ImageTab.post_titre;
     this.DescriptionImage = this.ImageTab.post_description;
     this.ImagePath = this.ImageTab.post_chemin;
+    this.UrlPhotoUser=this.ImageTab.url_photo_user;
   }
 
   GetRateData() {

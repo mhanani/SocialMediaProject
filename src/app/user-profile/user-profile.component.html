@@ -4,12 +4,15 @@
       <td rowspan="3">
         <nz-avatar
           nzIcon="user"
-          nzSrc="https://image.noelshack.com/fichiers/2019/43/2/1571769024-photo.png"
+          [nzSrc]=userModel.userPhoto
         ></nz-avatar>
+        <div id="Ajoutimage">
+          <button nz-button nzType="default" (click)="isVisibleDeux=true">Ajouter une image</button>
+        </div>
       </td>
       <td>
         <span nz-text nzType="secondary"
-          ><h2>{{ userModel.pseudo }}</h2></span
+        ><h2>{{ userModel.pseudo }}</h2></span
         >
       </td>
     </tr>
@@ -46,17 +49,17 @@
   <div id="photos-div">
     <mat-grid-list cols="3" rowHeight="1.8:1">
       <mat-grid-tile *ngFor="let Image of TableauImage">
-        <img [src]="Image.post_chemin" (click)="checkIcon(Image)" />
+        <img [src]="Image.post_chemin" (click)="checkIcon(Image)"/>
       </mat-grid-tile>
     </mat-grid-list>
   </div>
 </div>
-<nz-modal
-  [(nzVisible)]="isVisible"
-  [nzTitle]="modalTitle"
-  [nzContent]="modalContent"
-  [nzFooter]="modalFooter"
-  (nzOnCancel)="Close()"
+<nz-modal *ngIf="isVisibleDeux === false"
+          [(nzVisible)]="isVisible"
+          [nzTitle]="modalTitle"
+          [nzContent]="modalContent"
+          [nzFooter]="modalFooter"
+          (nzOnCancel)="Close()"
 >
   <ng-template #modalTitle>
     {{ valueTitre }}
@@ -73,8 +76,8 @@
     <div>
       <nz-divider></nz-divider>
       Titre :
-      <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre" />
-      <br />
+      <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre"/>
+      <br/>
       Description :
       <textarea
         nz-input
@@ -104,3 +107,31 @@
     </div>
   </ng-template>
 </nz-modal>
+<!-- deuxieme modal  -->
+
+<nz-modal *ngIf="isVisible === false"
+          [(nzVisible)]="isVisibleDeux"
+          [nzContent]="modalContent"
+          [nzFooter]="modalFooter"
+          (nzOnCancel)="Fermer()"
+>
+  <ng-template #modalContent>
+    Choissisez voter image
+
+    <nz-upload [(nzFileList)]="fileList" nzListType="picture" nzName="coucou" [nzBeforeUpload]="beforeUpload">
+      <button nz-button>
+        <i nz-icon nzType="upload"></i><span>Ajouter une image</span>
+      </button>
+      <div *ngIf="imagePreviewDeux !== '' && imagePreviewDeux">
+        <img id="imageprev" [src]="imagePreviewDeux"/>
+      </div>
+    </nz-upload>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button nz-button nzType="danger" (click)="Fermer()" class="modal-anunuler-button">Annuler</button>
+    <button nz-button nzType="default" (click)="Ajouter()"
+            class="modal-poster-button">Ajouter
+    </button>
+  </ng-template>
+</nz-modal>
+

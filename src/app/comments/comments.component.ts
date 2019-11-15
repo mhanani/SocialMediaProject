@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { distanceInWords } from "date-fns";
-import { Subscription } from "rxjs";
-import { ImageService } from "src/Services/ServiceImage/images.service";
-import { AuthService } from "src/Services/AuthService/auth.service";
+import {Component, Input, OnInit} from "@angular/core";
+import {distanceInWords} from "date-fns";
+import {Subscription} from "rxjs";
+import {ImageService} from "src/Services/ServiceImage/images.service";
+import {AuthService} from "src/Services/AuthService/auth.service";
 
 @Component({
   selector: "app-comments",
@@ -13,13 +13,14 @@ export class CommentsComponent implements OnInit {
   TableauCommentaire: any = [];
   private TableauSub: Subscription;
   submitting = false;
-  author: "Han Solo";
-  avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
   inputValue = "";
   @Input() ImageTab;
-  Pseudo = this.auth.getPseudoDecodedToken();
+  //Pseudo = this.auth.getPseudoDecodedToken();
+  UrlPhotoActuel = this.auth.getPhotoDecodedToken();
 
-  constructor(private imageService: ImageService, private auth: AuthService) {}
+
+  constructor(private imageService: ImageService, private auth: AuthService) {
+  }
 
   GetCommentaire() {
     this.imageService.GetCommentaire(this.ImageTab.id_post).subscribe(res => {
@@ -28,9 +29,9 @@ export class CommentsComponent implements OnInit {
     });
   }
 
-  EnvoieCommentaire(pseudo: string, contenu: string, idPost: number) {
+  EnvoieCommentaire(contenu: string, idPost: number) {
     if (contenu !== "") {
-      this.imageService.EnvoieCommentaire(pseudo, contenu, idPost);
+      this.imageService.EnvoieCommentaire(contenu, idPost);
     }
   }
 
@@ -49,7 +50,7 @@ export class CommentsComponent implements OnInit {
     this.inputValue = "";
     setTimeout(() => {
       this.submitting = false;
-      this.EnvoieCommentaire(this.Pseudo, content, this.ImageTab.id_post);
+      this.EnvoieCommentaire(content, this.ImageTab.id_post);
     }, 500);
   }
 }

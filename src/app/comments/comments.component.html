@@ -3,13 +3,13 @@
   *ngFor="let item of TableauCommentaire"
   [nzDatetime]="item.created_date"
 >
-  <nz-avatar nz-comment-avatar nzIcon="user"></nz-avatar>
+  <nz-avatar nz-comment-avatar nzIcon="user" [nzSrc]="item.url_photo"></nz-avatar>
   <nz-comment-content>
     <p>{{ item.commentaire }}</p>
   </nz-comment-content>
 </nz-comment>
 <nz-comment>
-  <nz-avatar nz-comment-avatar nzIcon="user"></nz-avatar>
+  <nz-avatar nz-comment-avatar nzIcon="user" [nzSrc]="UrlPhotoActuel"></nz-avatar>
   <nz-comment-content>
     <nz-form-item>
       <textarea

@@ -1,8 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { AuthService } from "src/Services/AuthService/auth.service";
-import { User } from "src/Model/User/user";
-import { HttpClient } from "@angular/common/http";
-import { ImageService } from "src/Services/ServiceImage/images.service";
+import {Component, OnInit} from "@angular/core";
+import {AuthService} from "src/Services/AuthService/auth.service";
+import {User} from "src/Model/User/user";
+import {HttpClient} from "@angular/common/http";
+import {ImageService} from "src/Services/ServiceImage/images.service";
+import {UploadFile} from 'ng-zorro-antd';
 
 @Component({
   selector: "app-user-profile",
@@ -14,7 +15,8 @@ export class UserProfileComponent implements OnInit {
     private auth: AuthService,
     private imageService: ImageService,
     private http: HttpClient
-  ) {}
+  ) {
+  }
 
   userModel = new User();
 
@@ -34,12 +36,13 @@ export class UserProfileComponent implements OnInit {
         var nbPublication = res[0].nb_publications;
         var nbAmis = res[0].nb_relations;
         var pseudo = res[0].pseudo;
-
+        var userPhoto = res[0].url_photo;
         this.userModel.setPseudo(pseudo);
+        this.userModel.setUserPhoto(userPhoto);
 
-        console.log("Données récup : ");
       },
-      err => {}
+      err => {
+      }
     );
   }
 
@@ -56,10 +59,25 @@ export class UserProfileComponent implements OnInit {
   nbPublication: number;
   nbAmis: number;
   pseudo: string;
+  userPhoto: string;
+  imagePreviewDeux;
+  isVisibleDeux = false;
+  fileList = [];
 
   gridStyle = {
     width: "25%",
     textAlign: "center"
+  };
+
+  beforeUpload = (file: UploadFile): boolean => {
+    this.fileList = this.fileList.concat(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviewDeux = reader.result as string;
+    };
+    reader.readAsDataURL(this.fileList[0]);
+    console.log(this.fileList[0]);
+    return false;
   };
 
   checkIcon(Image) {
@@ -104,5 +122,22 @@ export class UserProfileComponent implements OnInit {
 
   Close() {
     this.isVisible = false;
+  }
+
+  Fermer() {
+    this.isVisibleDeux = false;
+    this.imagePreviewDeux = '';
+    this.fileList = [];
+  }
+
+  Ajouter() {
+    const postData = new FormData();
+    postData.append('image', this.fileList[0]);
+    this.isVisibleDeux = false;
+    this.imageService.EnvoieUneImageProfile(postData).subscribe(res => {
+      this.ngOnInit();
+      this.fileList = [];
+      this.imagePreview = '';
+    });
   }
 }

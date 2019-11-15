@@ -13,15 +13,15 @@ const session = require("express-session");
 
 app.use(bodyparser.json()); // to give Express the ability to read JSON payloads from the HTTP request body
 app.use(cors());
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.urlencoded({extended: false}));
 app.use(express.static("Images"));
 
 const RSA_PRIVATE_KEY = "secret"; // People usually store it in a file and use fs library to open it (fs.readFyleSync('');)
 
 var mysqlConnection = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "",
+  user: "admin",
+  password: "admin",
   database: "web_project"
 });
 
@@ -64,7 +64,7 @@ app.post("/image/commentaire", (req, res, next) => {
   var sql = "INSERT INTO images (img_commentaire) VALUES (?) ";
   const values = req.body.commentaire;
 
-  mysqlConnection.query(sql, values, function(err, result, fields) {
+  mysqlConnection.query(sql, values, function (err, result, fields) {
     if (err) throw err;
     res.json("ahahah");
   });
@@ -72,7 +72,7 @@ app.post("/image/commentaire", (req, res, next) => {
 
 app.post(
   "/Images/:id",
-  multer({ storage: storage }).single("image"),
+  multer({storage: storage}).single("image"),
   (req, res, next) => {
     const valeurNet = JSON.parse(JSON.stringify(req.body)); // pour parser en json
     const id_user = req.params.id;
@@ -96,25 +96,68 @@ app.post(
     ];
 
     mysqlConnection.query(sql, Values, (err, result, fields) => {
+      mysqlConnection.query('SELECT id_post FROM post WHERE post_chemin = ? AND id_user = ?', [imagePath, req.params.id], (err, result, fields) => {
+        Values.push(result[0]);
+        mysqlConnection.query(
+          "UPDATE users SET nb_publications = nb_publications + 1 WHERE id_user = ?",
+          req.params.id,
+          (err, result, fields) => {
+            mysqlConnection.query('SELECT url_photo FROM users WHERE id_user = ?', req.params.id, (err, result, fields) => {
+              Values.push(result[0]);
+              res.json(Values);
+            });
+            if (err) throw err;
+          }
+        );
+      })
       if (err) throw err;
     });
-    mysqlConnection.query(
-      "UPDATE users SET nb_publications = nb_publications + 1 WHERE id_user = ?",
-      req.params.id,
-      (err, result, fields) => {
-        if (err) throw err;
-      }
-    );
-    res.json(Values);
+
   }
 );
 
+app.post('/Images-Profile/:id', multer({storage: storage}).single("image"), (req, res, next) => {
+  const name = req.file.originalname
+    .toLowerCase()
+    .split(" ")
+    .join("-");
+  const ext = '.' + MIME_TYPE_MAP[req.file.mimetype];
+  const url = req.protocol + '://' + req.get("host");
+  const imagePath = url + '/' + name + ext;
+  mysqlConnection.query('UPDATE  users SET url_photo = ? WHERE id_user = ? ', [imagePath, req.params.id], (err, result, fields) => {
+    if (err) throw err;
+  });
+  res.json();
+});
+
+
 app.get("/ImageRecuperer", (req, res) => {
+//FROM post p JOIN users u ON u.id_user = p.id_user ORDER BY id_post DESC
   mysqlConnection.query(
     "SELECT * FROM post ORDER BY id_post DESC;",
     (err, rows, fields) => {
       if (!err) {
-        res.send(rows);
+        var Tableau = [];
+        for (let row of rows) {
+          mysqlConnection.query('SELECT url_photo FROM users WHERE id_user = ? ', row.id_user, (err, result, fields) => {
+            const post = {
+              id_post: row.id_post,
+              created_date: row.created_date,
+              post_description: row.post_description,
+              id_user: row.id_user,
+              post_titre: row.post_titre,
+              post_nom: row.post_nom,
+              post_chemin: row.post_chemin,
+              post_ext: row.post_ext,
+              url_photo_user: result[0].url_photo
+            };
+            Tableau.push(post);
+
+            if (rows.length - 1 === rows.indexOf(row)) {
+              res.send(Tableau);
+            }
+          });
+        }
       } else {
         console.log(err);
       }
@@ -233,21 +276,31 @@ app.get("/GetRate/:id/postID/:id_post", (req, res) => {
 //////////////////////// Commentaires
 ////////////////////////////////////////////////////////////////////////////
 
-app.post("/EnvoieCommentaire/pseudo/:pseudo/postID/:id_post", (req, res) => {
+app.post("/EnvoieCommentaire/id_user/:id_user/postID/:id_post", (req, res) => {
+  var TableauDonnee = [];
   mysqlConnection.query(
-    "INSERT INTO commentaire(pseudo, commentaire, id_post) VALUES (?,?,?)",
-    [req.params.pseudo, req.body.contenu, req.params.id_post],
+    "INSERT INTO commentaire(id_user, commentaire, id_post) VALUES (?,?,?)",
+    [req.params.id_user, req.body.contenu, req.params.id_post],
     (err, rows, fields) => {
-      const pseudo = req.params.pseudo;
-      const commentaire = req.body.contenu;
-      res.json([pseudo, commentaire]);
+      TableauDonnee.push(req.body.contenu);
+      mysqlConnection.query(
+        "SELECT url_photo, pseudo FROM users WHERE id_user = ?",
+        [req.params.id_user],
+        (err, responseSQL, fields) => {
+          if (!err) {
+            TableauDonnee.push(responseSQL[0].url_photo, responseSQL[0].pseudo)
+            res.json(TableauDonnee);
+          }
+        }
+      );
     }
   );
 });
 
+//FROM post p JOIN users u ON u.id_user = p.id_user ORDER BY id_post DESC
 app.get("/GetCommentaire/postID/:id_post", (req, res) => {
   mysqlConnection.query(
-    "SELECT commentaire, created_date, pseudo FROM commentaire WHERE id_post = ? ORDER BY id_commentaire DESC",
+    "SELECT * FROM commentaire JOIN users ON commentaire.id_user = users.id_user WHERE commentaire.id_post = ? ORDER BY id_post DESC",
     [req.params.id_post],
     (err, responseSQL, fields) => {
       if (!err) {
@@ -271,7 +324,7 @@ app.get("/", (req, res) => {
 // Cet URL est lié à l'URL qu'on a cré dans user-registration.services.ts
 
 app.post("/register", (req, res) => {
-  res.status(200).send({ message: "Data received" });
+  res.status(200).send({message: "Data received"});
   var INSERT_QUERY =
     "INSERT INTO users (nom,prenom,age,email,pseudo,password,nb_publications,nb_relations) VALUES (?,?,?,?,?,?,?,?)";
   var query = mysql.format(INSERT_QUERY, [
@@ -309,15 +362,15 @@ app.post("/login", (req, res) => {
       if (row.length > 0) {
         const iduser = row[0].id_user;
         const pseudo = row[0].pseudo;
+        const url_photo = row[0].url_photo;
         // res.status(200).send({ message: email + " - " + password });
-        const payload = { id_user: iduser, pseudo: pseudo };
+        const payload = {id_user: iduser, pseudo: pseudo, url_photo: url_photo};
 
         const token_jwtmethod = jwt.sign(payload, RSA_PRIVATE_KEY, {
           algorithm: "HS256",
           expiresIn: 30
         });
-
-        res.status(200).json({ token: token_jwtmethod, email: email });
+        res.status(200).json({token: token_jwtmethod, email: email});
       } else {
         res.status(404).send(err);
       }
@@ -333,24 +386,6 @@ app.get("/user-profile/:id", (req, res) => {
     [req.params.id],
     (err, rows, fields) => {
       if (!err) {
-        var nom = rows[0].nom;
-        var prenom = rows[0].prenom;
-        var pseudo = rows[0].pseudo;
-        var age = rows[0].age;
-        var email = rows[0].email;
-        var nb_publications = rows[0].nb_publications;
-        var nb_relations = rows[0].nb_relations;
-
-        console.log(rows);
-        /* res.status(201).json({
-          nom: nom,
-          prenom: prenom,
-          pseudo: pseudo,
-          age: age,
-          email: email,
-          nb_publications: nb_publications,
-          nb_relations: nb_relations
-        });*/
         res.send(rows);
       } else {
         console.log(err);
