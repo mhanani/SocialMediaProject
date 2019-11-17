@@ -21,42 +21,4 @@
   color: #1890ff;
 }
 
-.logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 32px;
-  margin: 16px;
-}
 
-.MainSearch {
-  width: 300px;
-}
-
-/*
-header
- */
-nz-header {
-  z-index: 200;
-  width: 95%;
-  position: fixed;
-  padding: 0;
-}
-
-.header-flexbox {
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.header-div-center {
-  width: 300px;
-}
-
-.header-div-right {
-}
-
-/*#footer-p {
-  width: 100%;
-}*/
