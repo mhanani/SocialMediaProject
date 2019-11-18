@@ -11,9 +11,10 @@
         </div>
       </td>
       <td>
-        <span nz-text nzType="secondary"
-        ><h2>{{ userModel.pseudo }}</h2></span
-        >
+        <div id="MontrePseudo">
+          <h2>{{userModel.pseudo }}</h2>
+          <h5 style="margin-top: 10px">{{userModel.NbPublication}} publication(s)</h5>
+        </div>
       </td>
     </tr>
     <tr>
@@ -38,14 +39,6 @@
       </td>
     </tr>
   </table>
-
-  <div class="center">
-    <div nz-card-grid [ngStyle]="gridStyle">{{ nbAmis }} amis</div>
-    <div nz-card-grid [ngStyle]="gridStyle">
-      {{ nbPublication }} publications
-    </div>
-  </div>
-
   <div id="photos-div">
     <mat-grid-list cols="3" rowHeight="1.8:1">
       <mat-grid-tile *ngFor="let Image of TableauImage">

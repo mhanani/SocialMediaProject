@@ -25,7 +25,6 @@ export class CommentsComponent implements OnInit {
   GetCommentaire() {
     this.imageService.GetCommentaire(this.ImageTab.id_post).subscribe(res => {
       this.TableauCommentaire = res;
-      console.log(this.TableauCommentaire);
     });
   }
 

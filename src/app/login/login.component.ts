@@ -31,7 +31,6 @@ export class LoginComponent implements OnInit {
       res => {
         const token = res.token;
         this.authService.setToken(token); // bizarre parce que j'appelle cette fonction nul part mais il sait quand même faire getToken dans le HttpInterceptor
-        console.log("Succes !", token);
         //console.log("isAuthenticated ? : " + this.authService.isAuthenticated()); // print true
       },
       error => {

@@ -18,12 +18,10 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.imageService.AffichageImages().subscribe(reponse => {
-      console.log(reponse);
       this.tableauImage = reponse;
     });
     this.TableauSub = this.imageService.TableauUpdated.subscribe(NouveauPost => {
         this.tableauImage.unshift(NouveauPost);
-        console.log(this.tableauImage);
       }
     );
   }

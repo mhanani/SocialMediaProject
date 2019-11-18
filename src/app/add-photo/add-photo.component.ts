@@ -37,7 +37,6 @@ export class AddPhotoComponent implements OnInit {
       this.imagePreview = reader.result as string;
     };
     reader.readAsDataURL(this.fileList[0]);
-    console.log(this.fileList[0]);
     return false;
   };
 
@@ -62,7 +61,6 @@ export class AddPhotoComponent implements OnInit {
 
   // la fenetre pour fermer le modal
   handleCancel(): void {
-    console.log("Button cancel clicked!");
     this.fileList = [];
     this.valueTitre = "";
     this.valueDescription = "";

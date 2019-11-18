@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { ImageService } from "src/Services/ServiceImage/images.service";
+import {Component, Input, OnInit} from "@angular/core";
+import {ImageService} from "src/Services/ServiceImage/images.service";
+import {AuthService} from "../../Services/AuthService/auth.service";
 
 @Component({
   selector: "app-post-card",
@@ -7,7 +8,8 @@ import { ImageService } from "src/Services/ServiceImage/images.service";
   styleUrls: ["./post-card.component.scss"]
 })
 export class PostCardComponent implements OnInit {
-  constructor(private imageService: ImageService) {}
+  constructor(private imageService: ImageService, private auth: AuthService,) {
+  }
 
   tooltips = ["terrible", "bad", "normal", "good", "wonderful"];
   value = 0;
@@ -29,9 +31,9 @@ export class PostCardComponent implements OnInit {
       this.imageService
         .EnvoieRate(
           "http://localhost:3000/EnvoieRate/" +
-            this.imageService.IdSession +
-            "/postID/" +
-            this.ImageTab.id_post,
+          this.auth.getIdDecodedToken() +
+          "/postID/" +
+          this.ImageTab.id_post,
           value
         )
         .subscribe(res => {
@@ -47,7 +49,7 @@ export class PostCardComponent implements OnInit {
     this.TitreImage = this.ImageTab.post_titre;
     this.DescriptionImage = this.ImageTab.post_description;
     this.ImagePath = this.ImageTab.post_chemin;
-    this.UrlPhotoUser=this.ImageTab.url_photo_user;
+    this.UrlPhotoUser = this.ImageTab.url_photo_user;
   }
 
   GetRateData() {

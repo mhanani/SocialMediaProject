@@ -1,5 +1,7 @@
 export class User {
-  constructor() {}
+  constructor() {
+  }
+
   public nom: string;
   public prenom: string;
   public age: number;
@@ -7,6 +9,7 @@ export class User {
   public pseudo: string;
   public password: string;
   public userPhoto: string;
+  public NbPublication: string;
 
   public getNom(): string {
     return this.nom;
@@ -55,10 +58,21 @@ export class User {
   public setPassword(password: string): void {
     this.password = password;
   }
-  public getUserPhoto():string {
+
+  public getUserPhoto(): string {
     return this.userPhoto;
   }
-  public setUserPhoto(userPhoto):void {
-    this.userPhoto=userPhoto;
+
+  public setUserPhoto(userPhoto): void {
+    this.userPhoto = userPhoto;
   }
+
+  public getNbPublication(): string {
+    return this.NbPublication;
+  }
+
+  public setNbPublication(userNbPublication): void {
+    this.NbPublication = userNbPublication;
+  }
+
 }

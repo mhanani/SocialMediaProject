@@ -43,7 +43,7 @@ export class AuthService {
   }
 
   getIdDecodedToken(): number {
-    const decodedToken = this.jwtHelper.decodeToken(this.getToken());
+    var decodedToken = this.jwtHelper.decodeToken(this.getToken());
     return decodedToken.id_user;
   }
 

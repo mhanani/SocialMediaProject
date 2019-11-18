@@ -38,6 +38,7 @@ export class UserProfileComponent implements OnInit {
         var pseudo = res[0].pseudo;
         var userPhoto = res[0].url_photo;
         this.userModel.setPseudo(pseudo);
+        this.userModel.setNbPublication(nbPublication);
         this.userModel.setUserPhoto(userPhoto);
 
       },
@@ -76,7 +77,6 @@ export class UserProfileComponent implements OnInit {
       this.imagePreviewDeux = reader.result as string;
     };
     reader.readAsDataURL(this.fileList[0]);
-    console.log(this.fileList[0]);
     return false;
   };
 

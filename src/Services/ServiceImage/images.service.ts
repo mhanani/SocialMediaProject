@@ -9,15 +9,13 @@ import {AuthService} from "../AuthService/auth.service";
 export class ImageService {
   TableauUpdated = new Subject();
   TableauMessage = new Subject();
-  IdSession = this.auth.getIdDecodedToken();
 
   constructor(private http: HttpClient, private auth: AuthService) {
   }
 
   EnvoieUneImage(contenu) {
-    console.log(this.IdSession);
     this.http
-      .post("http://localhost:3000/Images/" + this.IdSession, contenu)
+      .post("http://localhost:3000/Images/" + this.auth.getIdDecodedToken(), contenu)
       .subscribe(res => {
         const titre = res[0];
         const nom = res[1];
@@ -47,21 +45,21 @@ export class ImageService {
 
   Profiles(): Observable<any[]> {
     return this.http.get<any[]>(
-      "http://localhost:3000/ImagesProfile/" + this.IdSession
+      "http://localhost:3000/ImagesProfile/" + this.auth.getIdDecodedToken()
     );
   }
 
   // a modifier encore car pas la  bonne méthode
   ModificationImage(contenu) {
     return this.http.post(
-      "http://localhost:3000/ModificationImage/" + this.IdSession,
+      "http://localhost:3000/ModificationImage/" + this.auth.getIdDecodedToken(),
       contenu
     );
   }
 
   SupressionImage(contenu) {
     return this.http.post(
-      "http://localhost:3000/SupressionImage/" + this.IdSession,
+      "http://localhost:3000/SupressionImage/" + this.auth.getIdDecodedToken(),
       contenu
     );
   }
@@ -74,7 +72,7 @@ export class ImageService {
   GetRate(getIDImage: number) {
     return this.http.get(
       "http://localhost:3000/GetRate/" +
-      this.IdSession +
+      this.auth.getIdDecodedToken() +
       "/postID/" +
       getIDImage
     );
@@ -92,7 +90,7 @@ export class ImageService {
     this.http
       .post(
         "http://localhost:3000/EnvoieCommentaire/id_user/" +
-        this.IdSession +
+        this.auth.getIdDecodedToken() +
         "/postID/" +
         idPost,
         {contenu}
@@ -112,6 +110,6 @@ export class ImageService {
   }
 
   EnvoieUneImageProfile(contenu) {
-    return this.http.post('http://localhost:3000/Images-Profile/' + this.IdSession, contenu);
+    return this.http.post('http://localhost:3000/Images-Profile/' + this.auth.getIdDecodedToken(), contenu);
   }
 }
