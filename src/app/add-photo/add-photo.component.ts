@@ -3,6 +3,7 @@ import { NzMessageService } from "ng-zorro-antd/message";
 import { HttpClient } from "@angular/common/http";
 import { UploadFile } from "ng-zorro-antd";
 import { ImageService } from "src/Services/ServiceImage/images.service";
+import axios from "axios";
 
 @Component({
   selector: "app-add-photo",
@@ -23,7 +24,36 @@ export class AddPhotoComponent implements OnInit {
     private imageService: ImageService
   ) {}
 
-  ngOnInit() {}
+  lat: number = 51.678418;
+  lng: number = 7.809007;
+  marker_lat: Number;
+  marker_lng: Number;
+
+  Event(event) {
+    console.log(event);
+    this.marker_lat = event.coords.lat;
+    this.marker_lng = event.coords.lng;
+  }
+
+  ngOnInit(): void {}
+
+  geocode(): void {
+    var location = "22 Main st Boston MA";
+
+    axios
+      .get("https://maps.googleapis.com/maps/api/geocode/json", {
+        params: {
+          address: location,
+          key: "AIzaSyCf-NA1a6uAE7eC56xhgmrMdODR2Os6wI4"
+        }
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
 
   showModal(): void {
     this.isVisible = true;

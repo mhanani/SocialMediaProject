@@ -2,27 +2,96 @@
   <table>
     <tr>
       <td rowspan="3">
-        <nz-avatar
-          nzIcon="user"
-          [nzSrc]=userModel.userPhoto
-        ></nz-avatar>
+        <nz-avatar nzIcon="user" [nzSrc]="userModel.userPhoto"></nz-avatar>
         <div id="Ajoutimage">
-          <button nz-button nzType="default" (click)="isVisibleDeux=true">Ajouter une image</button>
+          <button nz-button nzType="default" (click)="isVisibleDeux = true">
+            Ajouter une image
+          </button>
         </div>
       </td>
       <td>
         <div id="MontrePseudo">
-          <h2>{{userModel.pseudo }}</h2>
-          <h5 style="margin-top: 10px">{{userModel.NbPublication}} publication(s)</h5>
+          <h2>{{ userModel.pseudo }}</h2>
+          <h5 style="margin-top: 10px">
+            {{ userModel.NbPublication }} publication(s)
+          </h5>
         </div>
       </td>
     </tr>
     <tr>
       <td>
         <div id="Contenu-modificateur">
-          <button nz-button nzType="dashed" style="margin-right: 20px">
+          <button
+            nz-button
+            nzType="dashed"
+            style="margin-right: 20px"
+            (click)="showModalMiddle()"
+          >
             Modifier le profil
           </button>
+          <nz-modal
+            nzWrapClassName="vertical-center-modal"
+            [(nzVisible)]="isFirstVisibleMiddle"
+            nzTitle="Modification du profil"
+            (nzOnCancel)="handleCancelMiddle()"
+            (nzOnOk)="handleCancelMiddle()"
+          >
+            <div id="map"></div>
+            <button (click)="showMap()">Maps</button>
+            <button nz-button nzType="default" (click)="PseudoSelected()">
+              Modifier votre pseudo
+            </button>
+            <br />
+            <button nz-button nzType="default" (click)="EmailSelected()">
+              Modifier votre email
+            </button>
+            <br />
+            <button nz-button nzType="default" (click)="PasswordSelected()">
+              Modifier votre mot de passe
+            </button>
+          </nz-modal>
+
+          <nz-modal
+            nzWrapClassName="vertical-center-modal"
+            [(nzVisible)]="isPseudoVisibleMiddle"
+            nzTitle="Modification du pseudo"
+            (nzOnCancel)="handleCancelMiddle()"
+            (nzOnOk)="handleOkMiddle()"
+          >
+            Entrez votre nouveau pseudo :
+            <input
+              nz-input
+              placeholder="Pseudo"
+              [(ngModel)]="value_new_pseudo"
+            />
+          </nz-modal>
+
+          <nz-modal
+            nzWrapClassName="vertical-center-modal"
+            [(nzVisible)]="isPasswordVisibleMiddle"
+            nzTitle="Modification du mot de passe"
+            (nzOnCancel)="handleCancelMiddle()"
+            (nzOnOk)="handleOkMiddle()"
+          >
+            Entrez votre nouveau mot de passe :
+            <input
+              nz-input
+              type="password"
+              placeholder="Mot de passe"
+              [(ngModel)]="value_new_password"
+            />
+          </nz-modal>
+
+          <nz-modal
+            nzWrapClassName="vertical-center-modal"
+            [(nzVisible)]="isEmailVisibleMiddle"
+            nzTitle="Modification de l'email"
+            (nzOnCancel)="handleCancelMiddle()"
+            (nzOnOk)="handleOkMiddle()"
+          >
+            Entrez votre nouvel email :
+            <input nz-input placeholder="Email" [(ngModel)]="value_new_email" />
+          </nz-modal>
           <i
             nz-icon
             [nzSpin]="true"
@@ -39,20 +108,22 @@
       </td>
     </tr>
   </table>
+
   <div id="photos-div">
     <mat-grid-list cols="3" rowHeight="1.8:1">
       <mat-grid-tile *ngFor="let Image of TableauImage">
-        <img [src]="Image.post_chemin" (click)="checkIcon(Image)"/>
+        <img [src]="Image.post_chemin" (click)="checkIcon(Image)" />
       </mat-grid-tile>
     </mat-grid-list>
   </div>
 </div>
-<nz-modal *ngIf="isVisibleDeux === false"
-          [(nzVisible)]="isVisible"
-          [nzTitle]="modalTitle"
-          [nzContent]="modalContent"
-          [nzFooter]="modalFooter"
-          (nzOnCancel)="Close()"
+<nz-modal
+  *ngIf="isVisibleDeux === false"
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="Close()"
 >
   <ng-template #modalTitle>
     {{ valueTitre }}
@@ -69,8 +140,8 @@
     <div>
       <nz-divider></nz-divider>
       Titre :
-      <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre"/>
-      <br/>
+      <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre" />
+      <br />
       Description :
       <textarea
         nz-input
@@ -102,29 +173,46 @@
 </nz-modal>
 <!-- deuxieme modal  -->
 
-<nz-modal *ngIf="isVisible === false"
-          [(nzVisible)]="isVisibleDeux"
-          [nzContent]="modalContent"
-          [nzFooter]="modalFooter"
-          (nzOnCancel)="Fermer()"
+<nz-modal
+  *ngIf="isVisible === false"
+  [(nzVisible)]="isVisibleDeux"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="Fermer()"
 >
   <ng-template #modalContent>
     Choissisez voter image
 
-    <nz-upload [(nzFileList)]="fileList" nzListType="picture" nzName="coucou" [nzBeforeUpload]="beforeUpload">
+    <nz-upload
+      [(nzFileList)]="fileList"
+      nzListType="picture"
+      nzName="coucou"
+      [nzBeforeUpload]="beforeUpload"
+    >
       <button nz-button>
         <i nz-icon nzType="upload"></i><span>Ajouter une image</span>
       </button>
       <div *ngIf="imagePreviewDeux !== '' && imagePreviewDeux">
-        <img id="imageprev" [src]="imagePreviewDeux"/>
+        <img id="imageprev" [src]="imagePreviewDeux" />
       </div>
     </nz-upload>
   </ng-template>
   <ng-template #modalFooter>
-    <button nz-button nzType="danger" (click)="Fermer()" class="modal-anunuler-button">Annuler</button>
-    <button nz-button nzType="default" (click)="Ajouter()"
-            class="modal-poster-button">Ajouter
+    <button
+      nz-button
+      nzType="danger"
+      (click)="Fermer()"
+      class="modal-anunuler-button"
+    >
+      Annuler
+    </button>
+    <button
+      nz-button
+      nzType="default"
+      (click)="Ajouter()"
+      class="modal-poster-button"
+    >
+      Ajouter
     </button>
   </ng-template>
 </nz-modal>
-

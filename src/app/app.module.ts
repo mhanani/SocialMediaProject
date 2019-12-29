@@ -30,6 +30,8 @@ import { FormsModule } from "@angular/forms";
 import { TokenInterceptorService } from "src/Services/TokenInterceptor/token-interceptor.service";
 import { AuthService } from "src/Services/AuthService/auth.service";
 import { AuthGuard } from "src/Services/AuthGuard/auth.guard";
+import { AgmCoreModule } from "@agm/core";
+import { LocalisationComponent } from "./localisation/localisation.component";
 
 registerLocaleData(fr);
 
@@ -43,7 +45,8 @@ registerLocaleData(fr);
     AddPhotoComponent,
     NavbarComponent,
     CommentsComponent,
-    PostCardComponent
+    PostCardComponent,
+    LocalisationComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +64,10 @@ registerLocaleData(fr);
     ToastrModule,
     MatSelectModule,
     MatSidenavModule,
-    FormsModule
+    FormsModule,
+    AgmCoreModule.forRoot({
+      apiKey: "AIzaSyCf-NA1a6uAE7eC56xhgmrMdODR2Os6wI4"
+    })
   ],
   providers: [
     { provide: NZ_I18N, useValue: fr_BE },
