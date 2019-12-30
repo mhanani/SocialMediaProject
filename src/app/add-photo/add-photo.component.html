@@ -43,6 +43,25 @@
           <img [src]="imagePreview"/>
         </div>
       </nz-upload>
+      <br />
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+        <input
+          type="text"
+          [(ngModel)]="location"
+          nz-input
+          placeholder="input search text"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch (click)="geocode()">
+          <i nz-icon nzType="search"></i>
+        </button>
+      </ng-template>
+
+      <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="Event($event)">
+        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+      </agm-map>
+
       <div>
         <nz-divider></nz-divider>
         Titre :

@@ -1,8 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { NzMessageService } from "ng-zorro-antd/message";
-import { HttpClient } from "@angular/common/http";
-import { UploadFile } from "ng-zorro-antd";
-import { ImageService } from "src/Services/ServiceImage/images.service";
+import {Component, OnInit} from "@angular/core";
+import {NzMessageService} from "ng-zorro-antd/message";
+import {HttpClient} from "@angular/common/http";
+import {UploadFile} from "ng-zorro-antd";
+import {ImageService} from "src/Services/ServiceImage/images.service";
+import axios from "axios";
 
 @Component({
   selector: "app-add-photo",
@@ -16,14 +17,51 @@ export class AddPhotoComponent implements OnInit {
   valueTitre: string;
   imagePreview: string;
   fileList = [];
+  location: string;
+  latation;
+  lgnzzz;
 
   constructor(
     private message: NzMessageService,
     private http: HttpClient,
     private imageService: ImageService
-  ) {}
+  ) {
+  }
 
-  ngOnInit() {}
+  Event(event) {
+    console.log(event);
+    this.latation = event.coords.lat;
+    this.lgnzzz = event.coords.lng;
+  }
+
+  ngOnInit(): void {
+  }
+
+  geocode(): void {
+    var self = this;
+    axios
+      .get("https://maps.googleapis.com/maps/api/geocode/json", {
+        params: {
+          address: this.location,
+          key: "AIzaSyCf-NA1a6uAE7eC56xhgmrMdODR2Os6wI4"
+        }
+      })
+      .then(function (response) {
+        console.log(response);
+        console.log(response.data.results[0].geometry.location.lat);
+        console.log(response.data.results[0].geometry.location.lng);
+        let newLat = response.data.results[0].geometry.location.lat;
+        let newLng = response.data.results[0].geometry.location.lng;
+
+        console.log(newLat + " fdsfsdfsdf");
+        self.latation = newLat;
+        self.lgnzzz = newLng;
+        console.log(self.latation + " - " + self.lgnzzz);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   showModal(): void {
     this.isVisible = true;
@@ -33,6 +71,8 @@ export class AddPhotoComponent implements OnInit {
   beforeUpload = (file: UploadFile): boolean => {
     this.fileList = this.fileList.concat(file);
     const reader = new FileReader();
+    console.log(this.latation + "effectivement cela marche");
+    console.log(this.lgnzzz);
     reader.onload = () => {
       this.imagePreview = reader.result as string;
     };

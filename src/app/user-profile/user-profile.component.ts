@@ -5,6 +5,8 @@ import {HttpClient} from "@angular/common/http";
 import {ImageService} from "src/Services/ServiceImage/images.service";
 import {UploadFile} from 'ng-zorro-antd';
 import {Router} from "@angular/router";
+import Map from "ol/Map";
+import View from "ol/View";
 
 @Component({
   selector: "app-user-profile",
@@ -42,7 +44,6 @@ export class UserProfileComponent implements OnInit {
         this.userModel.setPseudo(pseudo);
         this.userModel.setNbPublication(nbPublication);
         this.userModel.setUserPhoto(userPhoto);
-
       },
       err => {
       }
@@ -66,6 +67,108 @@ export class UserProfileComponent implements OnInit {
   imagePreviewDeux;
   isVisibleDeux = false;
   fileList = [];
+  isFirstVisibleMiddle = false;
+  isPseudoVisibleMiddle = false;
+  isPasswordVisibleMiddle = false;
+  isEmailVisibleMiddle = false;
+  value_new_pseudo: string;
+  value_new_email: string;
+  value_new_password: string;
+  map: Map;
+  view: View;
+
+  showModalMiddle(): void {
+    this.isFirstVisibleMiddle = true;
+  }
+
+  handleOkMiddle(): void {
+    if (this.isPseudoVisibleMiddle) {
+      this._url =
+        "http://localhost:3000/user-profile/" +
+        this.auth.getIdDecodedToken() +
+        "/UpdatePseudo";
+      this.auth
+        .user_post_request({pseudo: this.value_new_pseudo}, this._url)
+        .subscribe(
+          res => {
+            console.log("Modification effectuée : " + res);
+          },
+          error => {
+            console.log("Erreur : modification non effectuée  - " + error);
+          }
+        );
+      console.log(this.value_new_pseudo);
+      console.log(this._url);
+      this._url =
+        "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
+    }
+    if (this.isEmailVisibleMiddle) {
+      this._url =
+        "http://localhost:3000/user-profile/" +
+        this.auth.getIdDecodedToken() +
+        "/UpdateEmail";
+      this.auth
+        .user_post_request({email: this.value_new_email}, this._url)
+        .subscribe(
+          res => {
+            console.log("Modification effectuée : " + res);
+          },
+          error => {
+            console.log("Erreur : modification non effectuée  - " + error);
+          }
+        );
+      console.log(this.value_new_email);
+      console.log(this._url);
+      this._url =
+        "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
+    }
+    if (this.isPasswordVisibleMiddle) {
+      this._url =
+        "http://localhost:3000/user-profile/" +
+        this.auth.getIdDecodedToken() +
+        "/UpdatePassword";
+      this.auth
+        .user_post_request({password: this.value_new_password}, this._url)
+        .subscribe(
+          res => {
+            console.log("Modification effectuée : " + res);
+          },
+          error => {
+            console.log("Erreur : modification non effectuée - " + error);
+          }
+        );
+      console.log(this.value_new_password);
+      console.log(this._url);
+      this._url =
+        "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
+    }
+    this.isFirstVisibleMiddle = false;
+    this.isPseudoVisibleMiddle = false;
+    this.isEmailVisibleMiddle = false;
+    this.isPasswordVisibleMiddle = false;
+  }
+
+  handleCancelMiddle(): void {
+    this.isFirstVisibleMiddle = false;
+    this.isPseudoVisibleMiddle = false;
+    this.isEmailVisibleMiddle = false;
+    this.isPasswordVisibleMiddle = false;
+  }
+
+  PseudoSelected(): void {
+    this.isFirstVisibleMiddle = false;
+    this.isPseudoVisibleMiddle = true;
+  }
+
+  PasswordSelected(): void {
+    this.isFirstVisibleMiddle = false;
+    this.isPasswordVisibleMiddle = true;
+  }
+
+  EmailSelected(): void {
+    this.isFirstVisibleMiddle = false;
+    this.isEmailVisibleMiddle = true;
+  }
 
   gridStyle = {
     width: "25%",
@@ -128,18 +231,18 @@ export class UserProfileComponent implements OnInit {
 
   Fermer() {
     this.isVisibleDeux = false;
-    this.imagePreviewDeux = '';
+    this.imagePreviewDeux = "";
     this.fileList = [];
   }
 
   Ajouter() {
     const postData = new FormData();
-    postData.append('image', this.fileList[0]);
+    postData.append("image", this.fileList[0]);
     this.isVisibleDeux = false;
     this.imageService.EnvoieUneImageProfile(postData).subscribe(res => {
       this.ngOnInit();
       this.fileList = [];
-      this.imagePreview = '';
+      this.imagePreview = "";
     });
   }
 }
