@@ -1,6 +1,6 @@
-import { Component } from "@angular/core";
-import { User } from "src/Model/User/user";
-import { AuthService } from "src/Services/AuthService/auth.service";
+import {Component, OnInit} from "@angular/core";
+import {User} from "src/Model/User/user";
+import {AuthService} from "src/Services/AuthService/auth.service";
 
 @Component({
   selector: "app-root",
@@ -8,5 +8,9 @@ import { AuthService } from "src/Services/AuthService/auth.service";
   styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+  }
+
 }
+
+

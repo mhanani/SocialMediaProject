@@ -2,7 +2,7 @@
   style="width:700px; margin-top: 20px"
   [nzCover]="coverTemplate"
   [nzActions]="[actionComment, actionEdit]"
-  [nzHoverable]="true"
+  [nzHoverable]="false"
 >
   <nz-card-meta
     [nzTitle]="TitreImage"
@@ -31,8 +31,7 @@
 </nz-card>
 <div>
   <ng-template #avatarTemplate>
-    <nz-avatar
-      [nzSrc]=UrlPhotoUser
+    <nz-avatar (click)="redirection(IdUser)" [nzSrc]=UrlPhotoUser
     ></nz-avatar>
   </ng-template>
   <ng-template #coverTemplate>

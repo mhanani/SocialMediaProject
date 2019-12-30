@@ -4,6 +4,7 @@ import {User} from "src/Model/User/user";
 import {HttpClient} from "@angular/common/http";
 import {ImageService} from "src/Services/ServiceImage/images.service";
 import {UploadFile} from 'ng-zorro-antd';
+import {Router} from "@angular/router";
 
 @Component({
   selector: "app-user-profile",
@@ -14,12 +15,13 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private imageService: ImageService,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {
   }
 
   userModel = new User();
-
+  IdUserCourant: string;
   _url = "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
 
   ngOnInit() {

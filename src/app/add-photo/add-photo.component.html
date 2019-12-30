@@ -40,15 +40,14 @@
           <i nz-icon nzType="upload"></i><span>Upload</span>
         </button>
         <div *ngIf="imagePreview !== '' && imagePreview">
-          <img [src]="imagePreview" />
+          <img [src]="imagePreview"/>
         </div>
       </nz-upload>
-
       <div>
         <nz-divider></nz-divider>
         Titre :
-        <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre" />
-        <br />
+        <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre"/>
+        <br/>
         Description :
         <textarea
           nz-input

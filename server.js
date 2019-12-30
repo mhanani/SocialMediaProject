@@ -348,6 +348,43 @@ app.post("/register", (req, res) => {
     }
   });
 });
+/////////////////////////////////////////////////message
+app.get("/PseudoGather", (req, res) => {
+  mysqlConnection.query(
+    "SELECT pseudo FROM users", (err, responseSQL, fields) => {
+      if (!err) {
+        res.send(responseSQL);
+      }
+    }
+  );
+});
+app.get("/GatherMessager/id_user_one/:id_one/pseudo_user_two/:pseudo_two", (req, res) => {
+  var ArrayPseudo = [];
+  mysqlConnection.query(
+    "SELECT id_user FROM users WHERE pseudo= ?", [req.params.pseudo_two], (err, responseSQL, fields) => {
+      mysqlConnection.query(
+        "SELECT content_message,pseudo FROM message JOIN users ON message.id_user_one = users.id_user WHERE id_user_one = ? AND id_user_two = ? OR id_user_one = ? AND id_user_two = ? ", [req.params.id_one, responseSQL[0].id_user, responseSQL[0].id_user, req.params.id_one], (err, resSQL, fields) => {
+          console.log(resSQL);
+          res.json(resSQL);
+        }
+      );
+    }
+  );
+});
+app.post("/EnvoieMessage/id_user_one/:id_one/pseudo_user_two/:pseudo_two", (req, res) => {
+  mysqlConnection.query(
+    "SELECT id_user FROM users WHERE pseudo= ?", [req.params.pseudo_two], (err, responseSQL, fields) => {
+      mysqlConnection.query(
+        "INSERT INTO message(content_message, id_user_one, id_user_two) VALUES (?,?,?)",
+        [req.body.content, req.params.id_one, responseSQL[0].id_user], (err, responseSQL, fields) => {
+          if (!err) {
+            console.log("message ajouté avec succès");
+          }
+        }
+      );
+    }
+  );
+});
 
 // LOGIN. Regarder comment faire app.route("/login").post(functionName)
 

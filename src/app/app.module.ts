@@ -30,6 +30,8 @@ import { FormsModule } from "@angular/forms";
 import { TokenInterceptorService } from "src/Services/TokenInterceptor/token-interceptor.service";
 import { AuthService } from "src/Services/AuthService/auth.service";
 import { AuthGuard } from "src/Services/AuthGuard/auth.guard";
+import { MessageComponent } from './message/message.component';
+import { LocalisationComponent } from './localisation/localisation.component';
 
 registerLocaleData(fr);
 
@@ -43,7 +45,9 @@ registerLocaleData(fr);
     AddPhotoComponent,
     NavbarComponent,
     CommentsComponent,
-    PostCardComponent
+    PostCardComponent,
+    MessageComponent,
+    LocalisationComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {ImageService} from "src/Services/ServiceImage/images.service";
-import {AuthService} from "../../Services/AuthService/auth.service";
+import {AuthService} from "../../Services/AuthService/auth.service"
+import {Router} from "@angular/router";
 
 @Component({
   selector: "app-post-card",
@@ -8,7 +9,7 @@ import {AuthService} from "../../Services/AuthService/auth.service";
   styleUrls: ["./post-card.component.scss"]
 })
 export class PostCardComponent implements OnInit {
-  constructor(private imageService: ImageService, private auth: AuthService,) {
+  constructor(private imageService: ImageService, private auth: AuthService, private router: Router) {
   }
 
   tooltips = ["terrible", "bad", "normal", "good", "wonderful"];
@@ -21,6 +22,7 @@ export class PostCardComponent implements OnInit {
   ImagePath;
   Votes: number;
   UrlPhotoUser;
+  IdUser: number;
 
   showMessage() {
     this.ComVisible = !this.ComVisible;
@@ -46,6 +48,7 @@ export class PostCardComponent implements OnInit {
   }
 
   Affichage() {
+    this.IdUser = this.ImageTab.id_user;
     this.TitreImage = this.ImageTab.post_titre;
     this.DescriptionImage = this.ImageTab.post_description;
     this.ImagePath = this.ImageTab.post_chemin;
@@ -60,6 +63,10 @@ export class PostCardComponent implements OnInit {
         this.valueMoyenne = res[2].Somme / res[1];
       }
     });
+  }
+
+  redirection(IdUser: number) {
+    //this.router.navigate(["/user-profile/" + IdUser]);
   }
 
   // j'attribue les valeur du tableau image au élément des post-card
