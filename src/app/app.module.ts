@@ -31,7 +31,6 @@ import { TokenInterceptorService } from "src/Services/TokenInterceptor/token-int
 import { AuthService } from "src/Services/AuthService/auth.service";
 import { AuthGuard } from "src/Services/AuthGuard/auth.guard";
 import { AgmCoreModule } from "@agm/core";
-import { LocalisationComponent } from "./localisation/localisation.component";
 
 registerLocaleData(fr);
 
@@ -45,8 +44,7 @@ registerLocaleData(fr);
     AddPhotoComponent,
     NavbarComponent,
     CommentsComponent,
-    PostCardComponent,
-    LocalisationComponent
+    PostCardComponent
   ],
   imports: [
     BrowserModule,

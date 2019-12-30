@@ -46,16 +46,23 @@
 
       <br />
 
-      <app-localisation></app-localisation>
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+        <input
+          type="text"
+          [(ngModel)]="location"
+          nz-input
+          placeholder="input search text"
+        />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch (click)="geocode()">
+          <i nz-icon nzType="search"></i>
+        </button>
+      </ng-template>
 
-      <!--
       <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="Event($event)">
-        <agm-marker
-          [latitude]="marker_lat"
-          [longitude]="marker_lng"
-        ></agm-marker>
+        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
       </agm-map>
-      -->
 
       <div>
         <nz-divider></nz-divider>

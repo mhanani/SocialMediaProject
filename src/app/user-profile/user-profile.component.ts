@@ -76,31 +76,6 @@ export class UserProfileComponent implements OnInit {
   map: Map;
   view: View;
 
-  showMap(): void {
-    const osmLayer = new TileLayer({
-      source: new OSM()
-    });
-
-    const xyzLayer = new TileLayer({
-      source: new XYZ({
-        url: "http://tile.osm.org/{z}/{x}/{y}.png"
-      })
-    });
-    this.view = new View({
-      center: [-472202, 7530279],
-      zoom: 12
-    });
-
-    this.map = new Map({
-      target: "map",
-      layers: [
-        osmLayer
-        // xyzLayer
-      ],
-      view: this.view
-    });
-  }
-
   showModalMiddle(): void {
     this.isFirstVisibleMiddle = true;
   }

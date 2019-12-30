@@ -17,6 +17,9 @@ export class AddPhotoComponent implements OnInit {
   valueTitre: string;
   imagePreview: string;
   fileList = [];
+  location: string;
+  lat;
+  lng;
 
   constructor(
     private message: NzMessageService,
@@ -24,31 +27,34 @@ export class AddPhotoComponent implements OnInit {
     private imageService: ImageService
   ) {}
 
-  lat: number = 51.678418;
-  lng: number = 7.809007;
-  marker_lat: Number;
-  marker_lng: Number;
-
   Event(event) {
     console.log(event);
-    this.marker_lat = event.coords.lat;
-    this.marker_lng = event.coords.lng;
+    this.lat = event.coords.lat;
+    this.lng = event.coords.lng;
   }
 
   ngOnInit(): void {}
 
   geocode(): void {
-    var location = "22 Main st Boston MA";
-
     axios
       .get("https://maps.googleapis.com/maps/api/geocode/json", {
         params: {
-          address: location,
+          address: this.location,
           key: "AIzaSyCf-NA1a6uAE7eC56xhgmrMdODR2Os6wI4"
         }
       })
       .then(function(response) {
         console.log(response);
+        console.log(response.data.results[0].geometry.location.lat);
+        console.log(response.data.results[0].geometry.location.lng);
+
+        let newLat = response.data.results[0].geometry.location.lat;
+        let newLng = response.data.results[0].geometry.location.lng;
+
+        console.log(newLat + " fdsfsdfsdf");
+        this.lat = newLat;
+        this.lng = newLng;
+        console.log(this.lat + " - " + this.lng);
       })
       .catch(function(error) {
         console.log(error);
