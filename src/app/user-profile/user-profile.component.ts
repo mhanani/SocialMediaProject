@@ -74,6 +74,7 @@ export class UserProfileComponent implements OnInit {
   value_new_email: string;
   value_new_password: string;
   map: Map;
+  location;
   view: View;
 
   createMessage(type: string): void {
@@ -207,6 +208,7 @@ export class UserProfileComponent implements OnInit {
     this.imagePreview = Image.post_chemin;
     this.extension = Image.post_ext;
     this.nomFichier = Image.post_nom;
+    this.location=Image.post_location;
   }
 
   Supprimer() {

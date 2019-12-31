@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable, Subject } from "rxjs";
-import { AuthService } from "../AuthService/auth.service";
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
+import {Observable, Subject} from "rxjs";
+import {AuthService} from "../AuthService/auth.service";
 
 @Injectable({
   providedIn: "root"
@@ -10,7 +10,8 @@ export class ImageService {
   TableauUpdated = new Subject();
   TableauMessage = new Subject();
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(private http: HttpClient, private auth: AuthService) {
+  }
 
   EnvoieUneImage(contenu) {
     this.http
@@ -25,8 +26,9 @@ export class ImageService {
         const extension = res[3];
         const chemin = res[4];
         const idUser = res[5];
-        const id_post = res[6].id_post;
-        const url_photo_user = res[7].url_photo;
+        const location = res[6];
+        const id_post = res[7].id_post;
+        const url_photo_user = res[8].url_photo;
         const post = {
           post_titre: titre,
           post_nom: nom,
@@ -34,6 +36,7 @@ export class ImageService {
           post_ext: extension,
           post_chemin: chemin,
           id_user: idUser,
+          post_location: location,
           id_post: id_post,
           url_photo_user: url_photo_user
         };
@@ -55,7 +58,7 @@ export class ImageService {
   ModificationImage(contenu) {
     return this.http.post(
       "http://localhost:3000/ModificationImage/" +
-        this.auth.getIdDecodedToken(),
+      this.auth.getIdDecodedToken(),
       contenu
     );
   }
@@ -69,15 +72,15 @@ export class ImageService {
 
   ////////////////////////////////////////////////////////////// RATE
   EnvoieRate(url: string, value: number) {
-    return this.http.post(url, { valeur: value });
+    return this.http.post(url, {valeur: value});
   }
 
   GetRate(getIDImage: number) {
     return this.http.get(
       "http://localhost:3000/GetRate/" +
-        this.auth.getIdDecodedToken() +
-        "/postID/" +
-        getIDImage
+      this.auth.getIdDecodedToken() +
+      "/postID/" +
+      getIDImage
     );
   }
 
@@ -93,10 +96,10 @@ export class ImageService {
     this.http
       .post(
         "http://localhost:3000/EnvoieCommentaire/id_user/" +
-          this.auth.getIdDecodedToken() +
-          "/postID/" +
-          idPost,
-        { contenu }
+        this.auth.getIdDecodedToken() +
+        "/postID/" +
+        idPost,
+        {contenu}
       )
       .subscribe(res => {
         const Pseudo = res[2];

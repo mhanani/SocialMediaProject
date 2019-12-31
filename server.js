@@ -13,15 +13,15 @@ const session = require("express-session");
 
 app.use(bodyparser.json()); // to give Express the ability to read JSON payloads from the HTTP request body
 app.use(cors());
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.urlencoded({extended: false}));
 app.use(express.static("Images"));
 
 const RSA_PRIVATE_KEY = "secret"; // People usually store it in a file and use fs library to open it (fs.readFyleSync('');)
 
 var mysqlConnection = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "",
+  user: "admin",
+  password: "admin",
   database: "web_project"
 });
 
@@ -64,7 +64,7 @@ app.post("/image/commentaire", (req, res, next) => {
   var sql = "INSERT INTO images (img_commentaire) VALUES (?) ";
   const values = req.body.commentaire;
 
-  mysqlConnection.query(sql, values, function(err, result, fields) {
+  mysqlConnection.query(sql, values, function (err, result, fields) {
     if (err) throw err;
     res.json("ahahah");
   });
@@ -72,7 +72,7 @@ app.post("/image/commentaire", (req, res, next) => {
 
 app.post(
   "/Images/:id",
-  multer({ storage: storage }).single("image"),
+  multer({storage: storage}).single("image"),
   (req, res, next) => {
     const valeurNet = JSON.parse(JSON.stringify(req.body)); // pour parser en json
     const id_user = req.params.id;
@@ -83,16 +83,17 @@ app.post(
     const ext = "." + MIME_TYPE_MAP[req.file.mimetype];
     const url = req.protocol + "://" + req.get("host");
     const imagePath = url + "/" + name + ext;
-
+    console.log(valeurNet.location);
     var sql =
-      "INSERT INTO post(post_titre, post_nom, post_description, post_ext, post_chemin, id_user) VALUES (?,?,?,?,?,?) ";
+      "INSERT INTO post(post_titre, post_nom, post_description, post_ext, post_chemin, id_user, post_location) VALUES (?,?,?,?,?,?,?) ";
     Values = [
       valeurNet.titre,
       name,
       valeurNet.description,
       ext,
       imagePath,
-      id_user
+      id_user,
+      valeurNet.location
     ];
 
     mysqlConnection.query(sql, Values, (err, result, fields) => {
@@ -125,7 +126,7 @@ app.post(
 
 app.post(
   "/Images-Profile/:id",
-  multer({ storage: storage }).single("image"),
+  multer({storage: storage}).single("image"),
   (req, res, next) => {
     const name = req.file.originalname
       .toLowerCase()
@@ -166,7 +167,8 @@ app.get("/ImageRecuperer", (req, res) => {
                 post_nom: row.post_nom,
                 post_chemin: row.post_chemin,
                 post_ext: row.post_ext,
-                url_photo_user: result[0].url_photo
+                url_photo_user: result[0].url_photo,
+                post_location: row.post_location
               };
               Tableau.push(post);
 
@@ -446,7 +448,7 @@ app.post("/login", (req, res) => {
           algorithm: "HS256",
           expiresIn: 30
         });
-        res.status(200).json({ token: token_jwtmethod, email: email });
+        res.status(200).json({token: token_jwtmethod, email: email});
       } else {
         res.status(404).send(err);
       }

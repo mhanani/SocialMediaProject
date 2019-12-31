@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
-import { NzMessageService } from "ng-zorro-antd/message";
-import { HttpClient } from "@angular/common/http";
-import { UploadFile } from "ng-zorro-antd";
-import { ImageService } from "src/Services/ServiceImage/images.service";
+import {Component, OnInit} from "@angular/core";
+import {NzMessageService} from "ng-zorro-antd/message";
+import {HttpClient} from "@angular/common/http";
+import {UploadFile} from "ng-zorro-antd";
+import {ImageService} from "src/Services/ServiceImage/images.service";
 import axios from "axios";
 
 @Component({
@@ -32,6 +32,7 @@ export class AddPhotoComponent implements OnInit {
         this.lng = +pos.coords.longitude;
         this.lat = +pos.coords.latitude;
       });
+
     }
   }
 
@@ -41,7 +42,8 @@ export class AddPhotoComponent implements OnInit {
     this.lng = event.coords.lng;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   geocode(): void {
     var self = this;
@@ -52,14 +54,14 @@ export class AddPhotoComponent implements OnInit {
           key: "AIzaSyCf-NA1a6uAE7eC56xhgmrMdODR2Os6wI4"
         }
       })
-      .then(function(response) {
+      .then(function (response) {
         console.log(response);
         console.log(response.data.results[0].geometry.location.lat);
         console.log(response.data.results[0].geometry.location.lng);
         self.lat = response.data.results[0].geometry.location.lat;
         self.lng = response.data.results[0].geometry.location.lng;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -99,6 +101,7 @@ export class AddPhotoComponent implements OnInit {
       this.valueTitre = "";
       this.valueDescription = "";
       this.imagePreview = "";
+      this.location="";
       this.message.create(type, `Votre photo à bien été posté`);
     }, 1000);
   }
@@ -110,5 +113,6 @@ export class AddPhotoComponent implements OnInit {
     this.valueDescription = "";
     this.isVisible = false;
     this.imagePreview = "";
+    this.location="";
   }
 }
