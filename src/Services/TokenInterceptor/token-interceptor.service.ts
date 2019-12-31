@@ -45,7 +45,7 @@ export class TokenInterceptorService implements HttpInterceptor {
         error => {
           if (error instanceof HttpErrorResponse) {
             // Redirect login because token expired
-            console.log("Token expired");
+            //console.log("Token expired");
             //window.location.href = "http://localhost:4200/login";
           }
         }

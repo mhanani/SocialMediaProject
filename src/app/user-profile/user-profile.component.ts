@@ -1,10 +1,10 @@
-import {Component, OnInit} from "@angular/core";
-import {AuthService} from "src/Services/AuthService/auth.service";
-import {User} from "src/Model/User/user";
-import {HttpClient} from "@angular/common/http";
-import {ImageService} from "src/Services/ServiceImage/images.service";
-import {UploadFile} from 'ng-zorro-antd';
-import {Router} from "@angular/router";
+import { Component, OnInit } from "@angular/core";
+import { AuthService } from "src/Services/AuthService/auth.service";
+import { User } from "src/Model/User/user";
+import { HttpClient } from "@angular/common/http";
+import { ImageService } from "src/Services/ServiceImage/images.service";
+import { UploadFile, NzMessageService } from "ng-zorro-antd";
+import { Router } from "@angular/router";
 import Map from "ol/Map";
 import View from "ol/View";
 
@@ -18,9 +18,9 @@ export class UserProfileComponent implements OnInit {
     private auth: AuthService,
     private imageService: ImageService,
     private http: HttpClient,
-    private router: Router
-  ) {
-  }
+    private router: Router,
+    private message: NzMessageService
+  ) {}
 
   userModel = new User();
   IdUserCourant: string;
@@ -45,8 +45,7 @@ export class UserProfileComponent implements OnInit {
         this.userModel.setNbPublication(nbPublication);
         this.userModel.setUserPhoto(userPhoto);
       },
-      err => {
-      }
+      err => {}
     );
   }
 
@@ -77,70 +76,86 @@ export class UserProfileComponent implements OnInit {
   map: Map;
   view: View;
 
+  createMessage(type: string): void {
+    if (type == "error")
+      this.message.create(type, "Input can't be null. Please try again.");
+    else this.message.create(type, "Modification changed successfuly.");
+  }
+
   showModalMiddle(): void {
     this.isFirstVisibleMiddle = true;
   }
 
   handleOkMiddle(): void {
     if (this.isPseudoVisibleMiddle) {
-      this._url =
-        "http://localhost:3000/user-profile/" +
-        this.auth.getIdDecodedToken() +
-        "/UpdatePseudo";
-      this.auth
-        .user_post_request({pseudo: this.value_new_pseudo}, this._url)
-        .subscribe(
-          res => {
-            console.log("Modification effectuée : " + res);
-          },
-          error => {
-            console.log("Erreur : modification non effectuée  - " + error);
-          }
-        );
-      console.log(this.value_new_pseudo);
-      console.log(this._url);
-      this._url =
-        "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
+      if (this.value_new_pseudo != null) {
+        this._url =
+          "http://localhost:3000/user-profile/" +
+          this.auth.getIdDecodedToken() +
+          "/UpdatePseudo";
+        this.auth
+          .user_post_request({ pseudo: this.value_new_pseudo }, this._url)
+          .subscribe(
+            res => {
+              console.log("Modification effectuée : " + res);
+            },
+            error => {
+              console.log("Erreur : modification non effectuée  - " + error);
+            }
+          );
+        console.log(this.value_new_pseudo);
+        console.log(this._url);
+        this._url =
+          "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
+        //this.router.navigateByUrl("http://localhost:4200/user-profile");
+        this.createMessage("success");
+      } else this.createMessage("error");
     }
     if (this.isEmailVisibleMiddle) {
-      this._url =
-        "http://localhost:3000/user-profile/" +
-        this.auth.getIdDecodedToken() +
-        "/UpdateEmail";
-      this.auth
-        .user_post_request({email: this.value_new_email}, this._url)
-        .subscribe(
-          res => {
-            console.log("Modification effectuée : " + res);
-          },
-          error => {
-            console.log("Erreur : modification non effectuée  - " + error);
-          }
-        );
-      console.log(this.value_new_email);
-      console.log(this._url);
-      this._url =
-        "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
+      if (this.value_new_email != null) {
+        this._url =
+          "http://localhost:3000/user-profile/" +
+          this.auth.getIdDecodedToken() +
+          "/UpdateEmail";
+        this.auth
+          .user_post_request({ email: this.value_new_email }, this._url)
+          .subscribe(
+            res => {
+              console.log("Modification effectuée : " + res);
+            },
+            error => {
+              console.log("Erreur : modification non effectuée  - " + error);
+            }
+          );
+        console.log(this.value_new_email);
+        console.log(this._url);
+        this._url =
+          "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
+        this.createMessage("success");
+      } else this.createMessage("error");
     }
     if (this.isPasswordVisibleMiddle) {
-      this._url =
-        "http://localhost:3000/user-profile/" +
-        this.auth.getIdDecodedToken() +
-        "/UpdatePassword";
-      this.auth
-        .user_post_request({password: this.value_new_password}, this._url)
-        .subscribe(
-          res => {
-            console.log("Modification effectuée : " + res);
-          },
-          error => {
-            console.log("Erreur : modification non effectuée - " + error);
-          }
-        );
-      console.log(this.value_new_password);
-      console.log(this._url);
-      this._url =
-        "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
+      if (this.value_new_password != null) {
+        this._url =
+          "http://localhost:3000/user-profile/" +
+          this.auth.getIdDecodedToken() +
+          "/UpdatePassword";
+        this.auth
+          .user_post_request({ password: this.value_new_password }, this._url)
+          .subscribe(
+            res => {
+              console.log("Modification effectuée : " + res);
+            },
+            error => {
+              console.log("Erreur : modification non effectuée - " + error);
+            }
+          );
+        console.log(this.value_new_password);
+        console.log(this._url);
+        this._url =
+          "http://localhost:3000/user-profile/" + this.auth.getIdDecodedToken();
+        this.createMessage("success");
+      } else this.createMessage("error");
     }
     this.isFirstVisibleMiddle = false;
     this.isPseudoVisibleMiddle = false;

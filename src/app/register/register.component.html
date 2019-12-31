@@ -10,10 +10,10 @@
     <div class="row">
       <div class="col-md-6 mt-5 mx-auto">
         <form
-            #registerForm="ngForm"
-            *ngIf="!submitted"
-            (ngSubmit)="register()"
-            novalidate
+          #registerForm="ngForm"
+          *ngIf="!submitted"
+          (ngSubmit)="register()"
+          novalidate
         >
           <!--{{ registerForm.value | json }}
         <hr />
@@ -44,8 +44,7 @@
             <small
               class="text-danger"
               [class.d-none]="!firstname.valid || firstname.untouched"
-
-            >First name is required.</small
+              >First name is required.</small
             >
             <!-- ce small affiche un message si c'est invalid -->
           </div>
@@ -54,6 +53,7 @@
             <label>Last name</label>
             <input
               type="text"
+              required
               class="form-control"
               name="nom"
               placeholder="Enter your last name"
@@ -64,6 +64,7 @@
             <label>Age</label>
             <input
               type="number"
+              required
               class="form-control"
               name="age"
               placeholder="Age"
@@ -74,6 +75,7 @@
             <label>Email address</label>
             <input
               type="email"
+              required
               class="form-control"
               #email
               name="email"
@@ -87,6 +89,7 @@
             <label>Pseudo</label>
             <input
               type="text"
+              required
               class="form-control"
               name="pseudo"
               placeholder="Enter pseudo"
@@ -97,6 +100,7 @@
             <label>Password</label>
             <input
               type="password"
+              required
               class="form-control"
               name="password"
               placeholder="Password"
@@ -113,7 +117,6 @@
         </form>
 
         <!-- AFTER REGISTRATION - mettre un message succes + redirection -->
-        <form *ngIf="submitted"></form>
       </div>
     </div>
   </div>

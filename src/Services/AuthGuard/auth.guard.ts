@@ -10,11 +10,8 @@ export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    console.log("AuthGuard : " + this.authService.isMyTokenExpired());
-    /*
-    if (this.authService.isMyTokenExpired() == true) {
-      this.authService.removeToken();
-    }*/
+    //console.log("AuthGuard : " + this.authService.isMyTokenExpired());
+
     if (!this.authService.isAuthenticated()) {
       // Je veux que quand je reload et qu'il a expiré bah ça me redirige login. Marche pas mais ça permet de check le format du JWT
       this.router.navigate(["/login"]);

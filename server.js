@@ -20,8 +20,8 @@ const RSA_PRIVATE_KEY = "secret"; // People usually store it in a file and use f
 
 var mysqlConnection = mysql.createConnection({
   host: "localhost",
-  user: "admin",
-  password: "admin",
+  user: "root",
+  password: "",
   database: "web_project"
 });
 
@@ -342,7 +342,6 @@ app.get("/", (req, res) => {
 // Cet URL est lié à l'URL qu'on a cré dans user-registration.services.ts
 
 app.post("/register", (req, res) => {
-  res.status(200).send({ message: "Data received" });
   var INSERT_QUERY =
     "INSERT INTO users (nom,prenom,age,email,pseudo,password,nb_publications,nb_relations) VALUES (?,?,?,?,?,?,?,?)";
   var query = mysql.format(INSERT_QUERY, [
@@ -359,8 +358,7 @@ app.post("/register", (req, res) => {
 
   mysqlConnection.query(query, (err, rows, fields) => {
     if (!err) {
-      console.log(rows);
-      res.redirect("http://localhost:4200/login");
+      res.status(200).send(rows);
     } else {
       console.log(err);
     }
@@ -369,40 +367,59 @@ app.post("/register", (req, res) => {
 /////////////////////////////////////////////////message
 app.get("/PseudoGather", (req, res) => {
   mysqlConnection.query(
-    "SELECT pseudo FROM users", (err, responseSQL, fields) => {
+    "SELECT pseudo FROM users",
+    (err, responseSQL, fields) => {
       if (!err) {
         res.send(responseSQL);
       }
     }
   );
 });
-app.get("/GatherMessager/id_user_one/:id_one/pseudo_user_two/:pseudo_two", (req, res) => {
-  var ArrayPseudo = [];
-  mysqlConnection.query(
-    "SELECT id_user FROM users WHERE pseudo= ?", [req.params.pseudo_two], (err, responseSQL, fields) => {
-      mysqlConnection.query(
-        "SELECT content_message,pseudo FROM message JOIN users ON message.id_user_one = users.id_user WHERE id_user_one = ? AND id_user_two = ? OR id_user_one = ? AND id_user_two = ? ", [req.params.id_one, responseSQL[0].id_user, responseSQL[0].id_user, req.params.id_one], (err, resSQL, fields) => {
-          console.log(resSQL);
-          res.json(resSQL);
-        }
-      );
-    }
-  );
-});
-app.post("/EnvoieMessage/id_user_one/:id_one/pseudo_user_two/:pseudo_two", (req, res) => {
-  mysqlConnection.query(
-    "SELECT id_user FROM users WHERE pseudo= ?", [req.params.pseudo_two], (err, responseSQL, fields) => {
-      mysqlConnection.query(
-        "INSERT INTO message(content_message, id_user_one, id_user_two) VALUES (?,?,?)",
-        [req.body.content, req.params.id_one, responseSQL[0].id_user], (err, responseSQL, fields) => {
-          if (!err) {
-            console.log("message ajouté avec succès");
+app.get(
+  "/GatherMessager/id_user_one/:id_one/pseudo_user_two/:pseudo_two",
+  (req, res) => {
+    var ArrayPseudo = [];
+    mysqlConnection.query(
+      "SELECT id_user FROM users WHERE pseudo= ?",
+      [req.params.pseudo_two],
+      (err, responseSQL, fields) => {
+        mysqlConnection.query(
+          "SELECT content_message,pseudo FROM message JOIN users ON message.id_user_one = users.id_user WHERE id_user_one = ? AND id_user_two = ? OR id_user_one = ? AND id_user_two = ? ",
+          [
+            req.params.id_one,
+            responseSQL[0].id_user,
+            responseSQL[0].id_user,
+            req.params.id_one
+          ],
+          (err, resSQL, fields) => {
+            console.log(resSQL);
+            res.json(resSQL);
           }
-        }
-      );
-    }
-  );
-});
+        );
+      }
+    );
+  }
+);
+app.post(
+  "/EnvoieMessage/id_user_one/:id_one/pseudo_user_two/:pseudo_two",
+  (req, res) => {
+    mysqlConnection.query(
+      "SELECT id_user FROM users WHERE pseudo= ?",
+      [req.params.pseudo_two],
+      (err, responseSQL, fields) => {
+        mysqlConnection.query(
+          "INSERT INTO message(content_message, id_user_one, id_user_two) VALUES (?,?,?)",
+          [req.body.content, req.params.id_one, responseSQL[0].id_user],
+          (err, responseSQL, fields) => {
+            if (!err) {
+              console.log("message ajouté avec succès");
+            }
+          }
+        );
+      }
+    );
+  }
+);
 
 // LOGIN. Regarder comment faire app.route("/login").post(functionName)
 

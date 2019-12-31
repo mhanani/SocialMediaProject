@@ -37,7 +37,6 @@
             (nzOnOk)="handleCancelMiddle()"
           >
             <div id="map"></div>
-            <button (click)="showMap()">Maps</button>
             <button nz-button nzType="default" (click)="PseudoSelected()">
               Modifier votre pseudo
             </button>
@@ -60,6 +59,7 @@
           >
             Entrez votre nouveau pseudo :
             <input
+              required
               nz-input
               placeholder="Pseudo"
               [(ngModel)]="value_new_pseudo"
@@ -75,6 +75,7 @@
           >
             Entrez votre nouveau mot de passe :
             <input
+              required
               nz-input
               type="password"
               placeholder="Mot de passe"
@@ -90,7 +91,12 @@
             (nzOnOk)="handleOkMiddle()"
           >
             Entrez votre nouvel email :
-            <input nz-input placeholder="Email" [(ngModel)]="value_new_email" />
+            <input
+              nz-input
+              placeholder="Email"
+              required
+              [(ngModel)]="value_new_email"
+            />
           </nz-modal>
           <i
             nz-icon
@@ -181,7 +187,7 @@
   (nzOnCancel)="Fermer()"
 >
   <ng-template #modalContent>
-    Choissisez voter image
+    Choisissez une photo à importer :
 
     <nz-upload
       [(nzFileList)]="fileList"

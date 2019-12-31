@@ -1,8 +1,8 @@
-import {Component, OnInit} from "@angular/core";
-import {NzMessageService} from "ng-zorro-antd/message";
-import {HttpClient} from "@angular/common/http";
-import {UploadFile} from "ng-zorro-antd";
-import {ImageService} from "src/Services/ServiceImage/images.service";
+import { Component, OnInit } from "@angular/core";
+import { NzMessageService } from "ng-zorro-antd/message";
+import { HttpClient } from "@angular/common/http";
+import { UploadFile } from "ng-zorro-antd";
+import { ImageService } from "src/Services/ServiceImage/images.service";
 import axios from "axios";
 
 @Component({
@@ -17,25 +17,31 @@ export class AddPhotoComponent implements OnInit {
   valueTitre: string;
   imagePreview: string;
   fileList = [];
+  checked = false;
   location: string;
-  latation;
-  lgnzzz;
+  lat;
+  lng;
 
   constructor(
     private message: NzMessageService,
     private http: HttpClient,
     private imageService: ImageService
   ) {
+    if (navigator) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        this.lng = +pos.coords.longitude;
+        this.lat = +pos.coords.latitude;
+      });
+    }
   }
 
   Event(event) {
     console.log(event);
-    this.latation = event.coords.lat;
-    this.lgnzzz = event.coords.lng;
+    this.lat = event.coords.lat;
+    this.lng = event.coords.lng;
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   geocode(): void {
     var self = this;
@@ -46,19 +52,14 @@ export class AddPhotoComponent implements OnInit {
           key: "AIzaSyCf-NA1a6uAE7eC56xhgmrMdODR2Os6wI4"
         }
       })
-      .then(function (response) {
+      .then(function(response) {
         console.log(response);
         console.log(response.data.results[0].geometry.location.lat);
         console.log(response.data.results[0].geometry.location.lng);
-        let newLat = response.data.results[0].geometry.location.lat;
-        let newLng = response.data.results[0].geometry.location.lng;
-
-        console.log(newLat + " fdsfsdfsdf");
-        self.latation = newLat;
-        self.lgnzzz = newLng;
-        console.log(self.latation + " - " + self.lgnzzz);
+        self.lat = response.data.results[0].geometry.location.lat;
+        self.lng = response.data.results[0].geometry.location.lng;
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }
@@ -71,8 +72,6 @@ export class AddPhotoComponent implements OnInit {
   beforeUpload = (file: UploadFile): boolean => {
     this.fileList = this.fileList.concat(file);
     const reader = new FileReader();
-    console.log(this.latation + "effectivement cela marche");
-    console.log(this.lgnzzz);
     reader.onload = () => {
       this.imagePreview = reader.result as string;
     };
@@ -86,6 +85,11 @@ export class AddPhotoComponent implements OnInit {
     postData.append("titre", this.valueTitre);
     postData.append("description", this.valueDescription);
     postData.append("image", this.fileList[0], this.valueTitre);
+    if (this.checked == true) {
+      if (this.location != null) {
+        postData.append("location", this.location);
+      }
+    }
     this.isConfirmLoading = true;
     setTimeout(() => {
       this.isConfirmLoading = false;

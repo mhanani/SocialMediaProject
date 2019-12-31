@@ -23,14 +23,13 @@
     [nzFooter]="modalFooter"
     (nzOnCancel)="handleCancel()"
   >
-    <ng-template #modalTitle>
-      Custom Modal Title
+    <ng-template style="text-align: center;" #modalTitle>
+      Ajouter une publication
     </ng-template>
 
     <ng-template #modalContent>
-      Choissisez voter image
-
       <nz-upload
+        nzType="drag"
         [(nzFileList)]="fileList"
         nzListType="picture"
         nzName="coucou"
@@ -40,37 +39,53 @@
           <i nz-icon nzType="upload"></i><span>Upload</span>
         </button>
         <div *ngIf="imagePreview !== '' && imagePreview">
-          <img [src]="imagePreview"/>
+          <img [src]="imagePreview" />
         </div>
       </nz-upload>
       <br />
-      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-        <input
-          type="text"
-          [(ngModel)]="location"
-          nz-input
-          placeholder="input search text"
-        />
-      </nz-input-group>
-      <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch (click)="geocode()">
-          <i nz-icon nzType="search"></i>
-        </button>
-      </ng-template>
 
-      <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="Event($event)">
-        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-      </agm-map>
+      <label
+        nz-checkbox
+        [(ngModel)]="checked"
+        placeholder="Veuillez entrer une location"
+        >Ajouter une position géographique</label
+      >
+      <br />
+      <br />
+
+      <div [hidden]="!checked">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <input
+            type="text"
+            [(ngModel)]="location"
+            nz-input
+            placeholder="input search text"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="primary" nzSearch (click)="geocode()">
+            <i nz-icon nzType="search"></i>
+          </button>
+        </ng-template>
+
+        <br />
+        <br />
+
+        <agm-map [latitude]="lat" [longitude]="lng" (mapClick)="Event($event)">
+          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        </agm-map>
+      </div>
 
       <div>
         <nz-divider></nz-divider>
-        Titre :
-        <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre"/>
-        <br/>
-        Description :
+        <strong>Titre</strong>
+        <input nz-input placeholder="Titre" [(ngModel)]="valueTitre" />
+        <br />
+        <br />
+        <strong>Description</strong>
         <textarea
           nz-input
-          placeholder="ici une description"
+          placeholder="Description"
           [(ngModel)]="valueDescription"
           [nzAutosize]="{ minRows: 2, maxRows: 6 }"
         ></textarea>
