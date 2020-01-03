@@ -1,8 +1,8 @@
-import {Component, Input, OnInit} from "@angular/core";
-import {distanceInWords} from "date-fns";
-import {Subscription} from "rxjs";
-import {ImageService} from "src/Services/ServiceImage/images.service";
-import {AuthService} from "src/Services/AuthService/auth.service";
+import { Component, Input, OnInit } from "@angular/core";
+import { distanceInWords } from "date-fns";
+import { Subscription } from "rxjs";
+import { ImageService } from "src/Services/ServiceImage/images.service";
+import { AuthService } from "src/Services/AuthService/auth.service";
 
 @Component({
   selector: "app-comments",
@@ -16,11 +16,9 @@ export class CommentsComponent implements OnInit {
   inputValue = "";
   @Input() ImageTab;
   //Pseudo = this.auth.getPseudoDecodedToken();
-  UrlPhotoActuel = this.auth.getPhotoDecodedToken();
+  UrlPhotoActuel: any = this.auth.getPhotoDecodedToken();
 
-
-  constructor(private imageService: ImageService, private auth: AuthService) {
-  }
+  constructor(private imageService: ImageService, private auth: AuthService) {}
 
   GetCommentaire() {
     this.imageService.GetCommentaire(this.ImageTab.id_post).subscribe(res => {
@@ -39,6 +37,17 @@ export class CommentsComponent implements OnInit {
     this.TableauSub = this.imageService.TableauMessage.subscribe(
       NouveauCommentaire => {
         this.TableauCommentaire.unshift(NouveauCommentaire);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+    this.imageService.RecupLaPhoto().subscribe(
+      res => {
+        this.UrlPhotoActuel = res[0].url_photo;
+      },
+      err => {
+        console.log(err);
       }
     );
   }

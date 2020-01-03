@@ -98,6 +98,8 @@ export class UserProfileComponent implements OnInit {
           .user_post_request({ pseudo: this.value_new_pseudo }, this._url)
           .subscribe(
             res => {
+              this.userModel.pseudo = res;
+              console.log("this is res 0 : " + res);
               console.log("Modification effectuée : " + res);
             },
             error => {
@@ -208,7 +210,7 @@ export class UserProfileComponent implements OnInit {
     this.imagePreview = Image.post_chemin;
     this.extension = Image.post_ext;
     this.nomFichier = Image.post_nom;
-    this.location=Image.post_location;
+    this.location = Image.post_location;
   }
 
   Supprimer() {

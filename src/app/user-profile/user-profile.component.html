@@ -30,24 +30,36 @@
             Modifier le profil
           </button>
           <nz-modal
+            nzWidth="40%"
             nzWrapClassName="vertical-center-modal"
             [(nzVisible)]="isFirstVisibleMiddle"
             nzTitle="Modification du profil"
             (nzOnCancel)="handleCancelMiddle()"
             (nzOnOk)="handleCancelMiddle()"
           >
-            <div id="map"></div>
-            <button nz-button nzType="default" (click)="PseudoSelected()">
-              Modifier votre pseudo
-            </button>
-            <br/>
-            <button nz-button nzType="default" (click)="EmailSelected()">
-              Modifier votre email
-            </button>
-            <br/>
-            <button nz-button nzType="default" (click)="PasswordSelected()">
-              Modifier votre mot de passe
-            </button>
+            <div style="display: flex; justify-content: center;">
+              <button
+                nz-button
+                nzType="default"
+                (click)="PseudoSelected()"
+                style="margin-right: 5px;"
+              >
+                Modifier votre pseudo
+              </button>
+              <br />
+              <button
+                nz-button
+                nzType="default"
+                (click)="EmailSelected()"
+                style="margin-right: 5px;"
+              >
+                Modifier votre email
+              </button>
+              <br />
+              <button nz-button nzType="default" (click)="PasswordSelected()">
+                Modifier votre mot de passe
+              </button>
+            </div>
           </nz-modal>
 
           <nz-modal
@@ -118,7 +130,7 @@
   <div id="photos-div">
     <mat-grid-list cols="3" rowHeight="1.8:1">
       <mat-grid-tile *ngFor="let Image of TableauImage">
-        <img [src]="Image.post_chemin" (click)="checkIcon(Image)"/>
+        <img [src]="Image.post_chemin" (click)="checkIcon(Image)" />
       </mat-grid-tile>
     </mat-grid-list>
   </div>
@@ -144,11 +156,11 @@
     </div>
 
     <div>
-      <p *ngIf="location" style="margin-top: 10px">{{location}}</p>
+      <p *ngIf="location" style="margin-top: 10px">{{ location }}</p>
       <nz-divider></nz-divider>
       Titre :
-      <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre"/>
-      <br/>
+      <input nz-input placeholder="Ici le titre" [(ngModel)]="valueTitre" />
+      <br />
       Description :
       <textarea
         nz-input
@@ -200,7 +212,7 @@
         <i nz-icon nzType="upload"></i><span>Ajouter une image</span>
       </button>
       <div *ngIf="imagePreviewDeux !== '' && imagePreviewDeux">
-        <img id="imageprev" [src]="imagePreviewDeux"/>
+        <img id="imageprev" [src]="imagePreviewDeux" />
       </div>
     </nz-upload>
   </ng-template>

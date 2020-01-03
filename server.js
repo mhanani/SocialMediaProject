@@ -13,15 +13,15 @@ const session = require("express-session");
 
 app.use(bodyparser.json()); // to give Express the ability to read JSON payloads from the HTTP request body
 app.use(cors());
-app.use(bodyparser.urlencoded({extended: false}));
+app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.static("Images"));
 
 const RSA_PRIVATE_KEY = "secret"; // People usually store it in a file and use fs library to open it (fs.readFyleSync('');)
 
 var mysqlConnection = mysql.createConnection({
   host: "localhost",
-  user: "admin",
-  password: "admin",
+  user: "root",
+  password: "",
   database: "web_project"
 });
 
@@ -64,7 +64,7 @@ app.post("/image/commentaire", (req, res, next) => {
   var sql = "INSERT INTO images (img_commentaire) VALUES (?) ";
   const values = req.body.commentaire;
 
-  mysqlConnection.query(sql, values, function (err, result, fields) {
+  mysqlConnection.query(sql, values, function(err, result, fields) {
     if (err) throw err;
     res.json("ahahah");
   });
@@ -72,7 +72,7 @@ app.post("/image/commentaire", (req, res, next) => {
 
 app.post(
   "/Images/:id",
-  multer({storage: storage}).single("image"),
+  multer({ storage: storage }).single("image"),
   (req, res, next) => {
     const valeurNet = JSON.parse(JSON.stringify(req.body)); // pour parser en json
     const id_user = req.params.id;
@@ -126,7 +126,7 @@ app.post(
 
 app.post(
   "/Images-Profile/:id",
-  multer({storage: storage}).single("image"),
+  multer({ storage: storage }).single("image"),
   (req, res, next) => {
     const name = req.file.originalname
       .toLowerCase()
@@ -447,7 +447,7 @@ app.post("/login", (req, res) => {
           algorithm: "HS256",
           expiresIn: 30
         });
-        res.status(200).json({token: token_jwtmethod, email: email});
+        res.status(200).json({ token: token_jwtmethod, email: email });
       } else {
         res.status(404).send(err);
       }
@@ -470,6 +470,19 @@ app.get("/user-profile/:id", (req, res) => {
     }
   );
 });
+app.get("/recupLaPhoto/:id", (req, res) => {
+  mysqlConnection.query(
+    "SELECT url_photo FROM users WHERE id_user = ?",
+    [req.params.id],
+    (err, rows, fields) => {
+      if (!err) {
+        res.json(rows);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
 
 app.post("/user-profile/:id/UpdatePseudo", (req, res) => {
   console.log(req.body);
@@ -481,7 +494,7 @@ app.post("/user-profile/:id/UpdatePseudo", (req, res) => {
     [pseudo, id],
     (err, rows) => {
       if (!err) {
-        res.send(rows);
+        res.json(pseudo);
       } else {
         console.log(err);
       }

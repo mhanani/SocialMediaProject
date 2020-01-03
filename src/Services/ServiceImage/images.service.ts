@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Observable, Subject} from "rxjs";
-import {AuthService} from "../AuthService/auth.service";
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, Subject } from "rxjs";
+import { AuthService } from "../AuthService/auth.service";
 
 @Injectable({
   providedIn: "root"
@@ -10,8 +10,7 @@ export class ImageService {
   TableauUpdated = new Subject();
   TableauMessage = new Subject();
 
-  constructor(private http: HttpClient, private auth: AuthService) {
-  }
+  constructor(private http: HttpClient, private auth: AuthService) {}
 
   EnvoieUneImage(contenu) {
     this.http
@@ -58,7 +57,7 @@ export class ImageService {
   ModificationImage(contenu) {
     return this.http.post(
       "http://localhost:3000/ModificationImage/" +
-      this.auth.getIdDecodedToken(),
+        this.auth.getIdDecodedToken(),
       contenu
     );
   }
@@ -72,15 +71,15 @@ export class ImageService {
 
   ////////////////////////////////////////////////////////////// RATE
   EnvoieRate(url: string, value: number) {
-    return this.http.post(url, {valeur: value});
+    return this.http.post(url, { valeur: value });
   }
 
   GetRate(getIDImage: number) {
     return this.http.get(
       "http://localhost:3000/GetRate/" +
-      this.auth.getIdDecodedToken() +
-      "/postID/" +
-      getIDImage
+        this.auth.getIdDecodedToken() +
+        "/postID/" +
+        getIDImage
     );
   }
 
@@ -96,10 +95,10 @@ export class ImageService {
     this.http
       .post(
         "http://localhost:3000/EnvoieCommentaire/id_user/" +
-        this.auth.getIdDecodedToken() +
-        "/postID/" +
-        idPost,
-        {contenu}
+          this.auth.getIdDecodedToken() +
+          "/postID/" +
+          idPost,
+        { contenu }
       )
       .subscribe(res => {
         const Pseudo = res[2];
@@ -119,6 +118,11 @@ export class ImageService {
     return this.http.post(
       "http://localhost:3000/Images-Profile/" + this.auth.getIdDecodedToken(),
       contenu
+    );
+  }
+  RecupLaPhoto() {
+    return this.http.get(
+      "http://localhost:3000/recupLaPhoto/" + this.auth.getIdDecodedToken()
     );
   }
 }

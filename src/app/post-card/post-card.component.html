@@ -10,7 +10,9 @@
     [nzAvatar]="avatarTemplate"
   >
   </nz-card-meta>
-  <div style="display: flex; justify-content: end"><p *ngIf="location">{{location}}</p></div>
+  <div style="display: flex; justify-content: end">
+    <p *ngIf="location">{{ location }}</p>
+  </div>
   <div class="Conteneur-rate-post">
     <div>
       <nz-rate
@@ -18,13 +20,10 @@
         [nzTooltips]="tooltips"
         (click)="EnvoieRate(value)"
       ></nz-rate>
-      <span *ngIf="value" class="ant-rate-text">{{
-          value ? tooltips[value - 1] : ""
-        }}</span>
     </div>
     <div *ngIf="value != 0">
       <div>
-        <span>moyenne : {{ Votes }} vote(s)</span>
+        <span>{{ Votes }} rates </span>
         <nz-rate [ngModel]="valueMoyenne" nzDisabled></nz-rate>
       </div>
     </div>
@@ -32,11 +31,10 @@
 </nz-card>
 <div>
   <ng-template #avatarTemplate>
-    <nz-avatar (click)="redirection(IdUser)" [nzSrc]=UrlPhotoUser
-    ></nz-avatar>
+    <nz-avatar (click)="redirection(IdUser)" [nzSrc]="UrlPhotoUser"></nz-avatar>
   </ng-template>
   <ng-template #coverTemplate>
-    <img [src]="ImagePath" alt="une image"/>
+    <img [src]="ImagePath" alt="une image" />
   </ng-template>
   <ng-template #actionComment>
     <i nz-icon nzType="message" nzTheme="outline" (click)="showMessage()"></i>
