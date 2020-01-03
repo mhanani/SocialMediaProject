@@ -378,15 +378,14 @@ app.get("/PseudoGather", (req, res) => {
   );
 });
 app.get(
-  "/GatherMessager/id_user_one/:id_one/pseudo_user_two/:pseudo_two",
+  "/GatherMessager/id_user_one/:id_envoyant/pseudo_user_two/:pseudo_recevant",
   (req, res) => {
-    var ArrayPseudo = [];
     mysqlConnection.query(
       "SELECT id_user FROM users WHERE pseudo= ?",
-      [req.params.pseudo_two],
+      [req.params.pseudo_recevant],
       (err, responseSQL, fields) => {
         mysqlConnection.query(
-          "SELECT content_message,pseudo FROM message JOIN users ON message.id_user_one = users.id_user WHERE id_user_one = ? AND id_user_two = ? OR id_user_one = ? AND id_user_two = ? ",
+          "SELECT content_message,pseudo FROM message JOIN users ON message.id_envoyant = users.id_user WHERE id_envoyant = ? AND id_recevant = ? OR id_envoyant = ? AND id_recevant = ? ",
           [
             req.params.id_one,
             responseSQL[0].id_user,
@@ -410,7 +409,7 @@ app.post(
       [req.params.pseudo_two],
       (err, responseSQL, fields) => {
         mysqlConnection.query(
-          "INSERT INTO message(content_message, id_user_one, id_user_two) VALUES (?,?,?)",
+          "INSERT INTO message(content_message, id_envoyant, id_recevant) VALUES (?,?,?)",
           [req.body.content, req.params.id_one, responseSQL[0].id_user],
           (err, responseSQL, fields) => {
             if (!err) {

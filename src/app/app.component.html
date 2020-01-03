@@ -25,7 +25,7 @@
           class="nav-link"
           routerLink="/login"
           *ngIf="!authService.isAuthenticated()"
-          >Login</a
+        >Login</a
         >
       </li>
       <li class="nav-item">
@@ -34,7 +34,7 @@
           class="nav-link"
           routerLink="/register"
           *ngIf="!authService.isAuthenticated()"
-          >Register</a
+        >Register</a
         >
       </li>
       <li class="nav-item">
@@ -42,36 +42,36 @@
           class="nav-link"
           routerLink="/user-profile"
           *ngIf="authService.isAuthenticated()"
-          >Profile
+        >Profile
           <!--auth.getUserDetails()?.first_name-->
         </a>
       </li>
       <li class="nav-item">
         <a
           class="nav-link"
-          routerLink="/navbar"
+          routerLink="/home"
           *ngIf="authService.isAuthenticated()"
-          >Home</a
+        >Home</a
         >
         <!--*ngIf="!auth.isAuthenticated()"-->
       </li>
-      <!--
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          routerLink="/message"
-          *ngIf="authService.isAuthenticated()"
-          >Messages</a
-        >
-      </li>
-      -->
+
+      <!-- <li class="nav-item">
+         <a
+           class="nav-link"
+           routerLink="/message"
+           *ngIf="authService.isAuthenticated()"
+         >Messages</a
+         >
+       </li>-->
+
       <li class="nav-item">
         <a
           class="nav-link"
           routerLink="/"
           *ngIf="authService.isAuthenticated()"
           (click)="authService.logout()"
-          >Logout</a
+        >Logout</a
         >
       </li>
     </ul>

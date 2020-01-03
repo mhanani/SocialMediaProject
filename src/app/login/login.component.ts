@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
         this.authService.setToken(token); // bizarre parce que j'appelle cette fonction nul part mais il sait quand même faire getToken dans le HttpInterceptor
         //console.log("isAuthenticated ? : " + this.authService.isAuthenticated()); // print true
         this.createMessage("success");
-        this.router.navigateByUrl("/navbar");
+        this.router.navigateByUrl("/home");
       },
       error => {
         this.createMessage("error"); // print false

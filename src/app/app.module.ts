@@ -4,12 +4,12 @@ import { RouterModule } from "@angular/router";
 // Pages
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { HomeComponent } from "./home/home.component";
+import { HomeComponent } from "./landing/home.component";
 import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
 import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { AddPhotoComponent } from "./add-photo/add-photo.component";
-import { NavbarComponent } from "./navbar/navbar.component";
+import { NavbarComponent } from "./home/navbar.component";
 import { CommentsComponent } from "./comments/comments.component";
 import { PostCardComponent } from "./post-card/post-card.component";
 // Librairies

@@ -13,6 +13,7 @@ export class PostCardComponent implements OnInit {
   }
 
   tooltips = ["terrible", "bad", "normal", "good", "wonderful"];
+  idUserCourant;
   value = 0;
   valueMoyenne = 0;
   ComVisible = false;
@@ -55,6 +56,7 @@ export class PostCardComponent implements OnInit {
     this.ImagePath = this.ImageTab.post_chemin;
     this.UrlPhotoUser = this.ImageTab.url_photo_user;
     this.location = this.ImageTab.post_location;
+    this.idUserCourant = this.auth.getIdDecodedToken();
   }
 
   GetRateData() {
@@ -75,5 +77,6 @@ export class PostCardComponent implements OnInit {
   ngOnInit() {
     this.GetRateData();
     this.Affichage();
+    console.log(this.idUserCourant + "----" + this.IdUser);
   }
 }
