@@ -32,6 +32,7 @@ import { AuthService } from "src/Services/AuthService/auth.service";
 import { AuthGuard } from "src/Services/AuthGuard/auth.guard";
 import { MessageComponent } from "./message/message.component";
 import { AgmCoreModule } from "@agm/core";
+import { ListUserComponent } from './list-user/list-user.component';
 
 registerLocaleData(fr);
 
@@ -46,7 +47,8 @@ registerLocaleData(fr);
     NavbarComponent,
     CommentsComponent,
     PostCardComponent,
-    MessageComponent
+    MessageComponent,
+    ListUserComponent
   ],
   imports: [
     BrowserModule,

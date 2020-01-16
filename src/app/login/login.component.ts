@@ -1,10 +1,10 @@
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { User } from "src/Model/User/user";
-import { Observable } from "rxjs";
-import { AuthService } from "src/Services/AuthService/auth.service";
-import { NzMessageService } from "ng-zorro-antd";
+import {Component, OnInit} from "@angular/core";
+import {Router} from "@angular/router";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {User} from "src/Model/User/user";
+import {Observable} from "rxjs";
+import {AuthService} from "src/Services/AuthService/auth.service";
+import {NzMessageService} from "ng-zorro-antd";
 
 @Component({
   selector: "app-login",
@@ -17,7 +17,8 @@ export class LoginComponent implements OnInit {
     private http: HttpClient,
     private message: NzMessageService,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.authService.isAuthenticated() == false;

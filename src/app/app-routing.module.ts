@@ -9,6 +9,7 @@ import {AddPhotoComponent} from "./add-photo/add-photo.component";
 import {NavbarComponent} from "./home/navbar.component";
 import {AuthGuard} from "src/Services/AuthGuard/auth.guard";
 import {MessageComponent} from "./message/message.component";
+import {ListUserComponent} from "./list-user/list-user.component";
 
 const routes: Routes = [
   {path: "", component: HomeComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {path: "message", component: MessageComponent},
+  {path: "admin", component: ListUserComponent, canActivate: [AuthGuard]},
   {
     path: "home",
     component: NavbarComponent,

@@ -1,0 +1,27 @@
+<h1>Control Panel</h1>
+
+<nz-table #filterTable [nzData]="listOfDisplayData">
+  <thead>
+  <tr>
+    <th [nzAlign]="center">Name</th>
+    <th [nzAlign]="center" style="text-align: center">First Name</th>
+    <th [nzAlign]="center" style="text-align: center">Pseudo</th>
+    <th [nzAlign]="center">Age</th>
+    <th [nzAlign]="center">Address</th>
+    <th [nzAlign]="center">Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of filterTable.data">
+    <td [nzAlign]="center">{{ data.nom }}</td>
+    <td [nzAlign]="center">{{ data.prenom }}</td>
+    <td [nzAlign]="center">{{ data.pseudo }}</td>
+    <td [nzAlign]="center">{{ data.age }}</td>
+    <td [nzAlign]="center">{{ data.email }}</td>
+    <td [nzAlign]="center">
+      <button *ngIf="data.pseudo !='admin_smp'" nz-button nzType="danger" (click)="DeleteUser(data.pseudo)">Delete
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>

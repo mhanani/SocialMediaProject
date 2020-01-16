@@ -52,6 +52,12 @@ export class AuthService {
     return decodedToken.pseudo;
   }
 
+  AdminConnected(): boolean {
+    const decodedToken = this.jwtHelper.decodeToken(this.getToken());
+    const adminPseudo = decodedToken.pseudo;
+    return (adminPseudo === 'admin_smp') ? true : false;
+  }
+
   getPhotoDecodedToken(): string {
     const decodedToken = this.jwtHelper.decodeToken(this.getToken());
     return decodedToken.url_photo;

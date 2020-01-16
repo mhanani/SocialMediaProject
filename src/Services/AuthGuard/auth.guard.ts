@@ -1,13 +1,14 @@
-import { Injectable } from "@angular/core";
-import { CanActivate, Router } from "@angular/router";
-import { Observable } from "rxjs";
-import { AuthService } from "../AuthService/auth.service";
+import {Injectable} from "@angular/core";
+import {CanActivate, Router} from "@angular/router";
+import {Observable} from "rxjs";
+import {AuthService} from "../AuthService/auth.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+  }
 
   canActivate(): boolean {
     //console.log("AuthGuard : " + this.authService.isMyTokenExpired());
@@ -15,6 +16,9 @@ export class AuthGuard implements CanActivate {
     if (!this.authService.isAuthenticated()) {
       // Je veux que quand je reload et qu'il a expiré bah ça me redirige login. Marche pas mais ça permet de check le format du JWT
       this.router.navigate(["/login"]);
+      if (this.authService.AdminConnected()) {
+        this.router.navigate(["/admin"]);
+      }
     }
     return true;
   }

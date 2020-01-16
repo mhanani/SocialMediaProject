@@ -13,15 +13,15 @@ const session = require("express-session");
 
 app.use(bodyparser.json()); // to give Express the ability to read JSON payloads from the HTTP request body
 app.use(cors());
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.urlencoded({extended: false}));
 app.use(express.static("Images"));
 
 const RSA_PRIVATE_KEY = "secret"; // People usually store it in a file and use fs library to open it (fs.readFyleSync('');)
 
 var mysqlConnection = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "",
+  user: "admin",
+  password: "admin",
   database: "web_project"
 });
 
@@ -64,7 +64,7 @@ app.post("/image/commentaire", (req, res, next) => {
   var sql = "INSERT INTO images (img_commentaire) VALUES (?) ";
   const values = req.body.commentaire;
 
-  mysqlConnection.query(sql, values, function(err, result, fields) {
+  mysqlConnection.query(sql, values, function (err, result, fields) {
     if (err) throw err;
     res.json("ahahah");
   });
@@ -72,7 +72,7 @@ app.post("/image/commentaire", (req, res, next) => {
 
 app.post(
   "/Images/:id",
-  multer({ storage: storage }).single("image"),
+  multer({storage: storage}).single("image"),
   (req, res, next) => {
     const valeurNet = JSON.parse(JSON.stringify(req.body)); // pour parser en json
     const id_user = req.params.id;
@@ -126,7 +126,7 @@ app.post(
 
 app.post(
   "/Images-Profile/:id",
-  multer({ storage: storage }).single("image"),
+  multer({storage: storage}).single("image"),
   (req, res, next) => {
     const name = req.file.originalname
       .toLowerCase()
@@ -236,6 +236,44 @@ app.post("/SupressionImage/:id", (req, res) => {
   );
   res.json();
 });
+///////////////  Admin (getUsers) ////////////////
+
+app.post("/admin", (req, res) => {
+  mysqlConnection.query(
+    "SELECT nom,prenom,pseudo,age,email FROM users",
+    [],
+    (err, row) => {
+      if (row) {
+        res.send(row);
+      } else {
+        console.log("Erreur : Admin request.");
+      }
+    }
+  )
+});
+
+app.post("/deleteUser", (req, res) => {
+  var user_pseudo = req.body;
+  //console.log(user_pseudo.user_pseudo);
+  mysqlConnection.query(
+    "DELETE  FROM users WHERE pseudo = ?",
+    [user_pseudo.user_pseudo],
+    (err, row) => {
+      mysqlConnection.query("SELECT nom,prenom,pseudo,age,email FROM users", [], (err, rows) => {
+        if (rows) {
+          console.log("Supprimé !")
+          res.send(rows);
+        }
+      })
+      if (row) {
+        //console.log("Supprimé !")
+      } else {
+        console.log(err)
+      }
+    }
+  )
+})
+
 
 /////////////// Rate ////////////////
 
@@ -447,7 +485,7 @@ app.post("/login", (req, res) => {
           algorithm: "HS256",
           expiresIn: 30
         });
-        res.status(200).json({ token: token_jwtmethod, email: email });
+        res.status(200).json({token: token_jwtmethod, email: email});
       } else {
         res.status(404).send(err);
       }
